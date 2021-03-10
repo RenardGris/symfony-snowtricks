@@ -114,15 +114,16 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/{id}", name="figure_index", methods={"DELETE"})
-     * @return Response
-     *
+     * @Route("/figure/{id}/delete", name="figure_delete")
+     * @param Figure $figure
+     * @param EntityManagerInterface $manager
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function delete(): Response
+    public function delete(Figure $figure, EntityManagerInterface $manager): \Symfony\Component\HttpFoundation\RedirectResponse
     {
-        return $this->render('figure/index.html.twig', [
-            'controller_name' => 'FigureController',
-        ]);
+        $manager->remove($figure);
+        $manager->flush();
+        return $this->redirectToRoute('figure_index',  ['figure' => $manager->getRepository(Figure::class)]);
     }
 
 
