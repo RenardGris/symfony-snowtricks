@@ -1,0 +1,8 @@
+{# templates/emails/registration.html.twig #}
+<h3>You did it! You registered!</h3>
+
+<div>Hi {{ user.username }}!</div>
+<div>
+    Pour validr votre inscription veuillez cliquer sur ce lien
+    <a href="{{ url('validate_user', {'token': user.token} ) }}" class="btn btn-info">valider</a>
+</div>
