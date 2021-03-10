@@ -107,4 +107,25 @@ class UserController extends AbstractController
     }
 
 
+    /**
+     * @param User $user
+     * @param \Swift_Mailer $mailer
+     */
+    protected function sendValidationMail(User $user, \Swift_Mailer $mailer) {
+
+        $message = (new \Swift_Message('Validez votre inscription'))
+            ->setFrom('test@test.com')
+            ->setTo($user->getEmail())
+            ->setContentType("text/html")
+            ->setBody(
+                $this->renderView(
+                    'email/register_validation.html.twig',
+                    ['user' => $user]
+                )
+            );
+
+        $mailer->send($message);
+    }
+
+
 }
