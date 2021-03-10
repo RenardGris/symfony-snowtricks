@@ -2,8 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Figure;
+use App\Entity\User;
+use App\Form\FigureType;
 use App\Repository\FigureRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -46,14 +51,40 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/new", name="figure_index", methods={"POST"})
+     * @Route("/figure/new", name="figure_store")
+     * @param Figure|null $figure
+     * @param Request $request
+     * @param EntityManagerInterface $manager
      * @return Response
-     *
      */
-    public function store(): Response
+    public function store(Figure $figure = null,Request $request, EntityManagerInterface $manager): Response
     {
+
+        if(!$figure){
+            $figure = new Figure();
+        }
+
+        $form = $this->createForm(FigureType::class, $figure);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            !$figure->getId()
+                ? $figure->setCreatedAt(new \DateTime())->setAuthor($manager->getRepository(User::class)->find(60))
+                : null;
+
+            $manager->persist($figure);
+            $manager->flush();
+
+            return $this->redirectToRoute('figure_show', [
+                'id' => $figure->getId(),
+            ]);
+
+        }
+
         return $this->render('figure/store.html.twig', [
-            'controller_name' => 'FigureController',
+            'formFigure' => $form->createView(),
+            'editMode' => $figure->getId() !== null,
         ]);
     }
 
