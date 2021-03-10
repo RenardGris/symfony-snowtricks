@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
@@ -59,6 +60,12 @@ class User implements UserInterface
      */
     private $figures;
 
+    /**
+     * @Assert\EqualTo(propertyPath="password", message="le mot de passe doit être identique")
+     *
+     */
+    private $confirm_password;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -104,6 +111,16 @@ class User implements UserInterface
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getConfirmPassword()
+    {
+        return $this->confirm_password;
+    }
+
+    public function setConfirmPassword($confirm_password): void
+    {
+        $this->confirm_password = $confirm_password;
     }
 
     public function getAvatar(): ?string
