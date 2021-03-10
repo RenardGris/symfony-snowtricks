@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Figure;
 use App\Entity\User;
+use App\Form\CommentType;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,14 +29,22 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/{id}", name="figure_index", methods={"GET"})
+     * @Route("/figure/{id}", name="figure_show", methods={"GET"})
+     * @param Figure $figure
      * @return Response
-     *
      */
-    public function show(): Response
+    public function show(Figure $figure): Response
     {
+
+        $comment = new Comment();
+        $formComment = $this->createForm(CommentType::class, $comment, [
+            'action' => $this->generateUrl('comment_post', ['id' => $figure->getId()]),
+            'method' => 'POST',
+        ]);
+
         return $this->render('figure/show.html.twig', [
-            'controller_name' => 'FigureController',
+            'figure' => $figure,
+            'formComment' => $formComment->createView(),
         ]);
     }
 
