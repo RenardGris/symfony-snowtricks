@@ -6,36 +6,33 @@ use App\Entity\User;
 use App\Form\RegisterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends AbstractController
 {
 
     /**
-     * @Route("/login", name="login", methods={"GET"})
+     * @Route("/login", name="login")
+     * @param AuthenticationUtils $authenticationUtils
      * @return Response
-     *
      */
-    public function login(): Response
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
+        return $this->render('user/login.html.twig');
     }
 
     /**
-     * @Route("/logout", name="logout", methods={"GET"})
-     * @return Response
-     *
+     * @Route("/logout", name="logout")*
+     * @return RedirectResponse
      */
-    public function logout(): Response
+    public function logout(): RedirectResponse
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
+        return $this->redirectToRoute('figure_index');
     }
 
     /**
