@@ -72,14 +72,25 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/validate_user/{token}", name="validate_user", methods={"GET"})
+     * @Route("/validate_user/{token}", name="validate_user")
+     * @param User $user
+     * @param EntityManagerInterface $manager
      * @return Response
-     *
      */
-    public function validate(): Response
+    public function validate(User $user, EntityManagerInterface $manager): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
+
+        $message = 'Votre compte a déjà été validée';
+        if(!$user->getValidate()){
+            $user->setValidate(true);
+            $manager->persist($user);
+            $manager->flush();
+            $message = null;
+        }
+
+        return $this->render('user/validate.html.twig', [
+            'user' => $user,
+            'message' => $message,
         ]);
     }
 
