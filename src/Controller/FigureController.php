@@ -49,14 +49,29 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/{id}", name="figure_index", methods={"POST"})
+     * @Route("/figure/{id}/edit", name="figure_update")
+     * @param Figure $figure
+     * @param Request $request
+     * @param EntityManagerInterface $manager
      * @return Response
-     *
      */
-    public function update(): Response
+    public function update(Figure $figure, Request $request, EntityManagerInterface $manager): Response
     {
-        return $this->render('figure/index.html.twig', [
-            'controller_name' => 'FigureController',
+
+        $form = $this->createForm(FigureType::class, $figure);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $figure->setUpdatedAt(new  \DateTime());
+            $manager->persist($figure);
+            $manager->flush();
+
+        }
+
+        return $this->render('figure/update.html.twig', [
+            'formFigure' => $form->createView(),
         ]);
     }
 

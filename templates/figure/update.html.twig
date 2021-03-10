@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier une Figure{% endblock %}
+
+{%  form_theme formFigure 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <h1>Ajouter une figure</h1>
+
+    {{ form_start(formFigure) }}
+
+    {{ form_row(formFigure.name, { 'attr' : {'placeholder' : 'Nom'}}) }}
+    {{ form_row(formFigure.type, { 'attr' : {'placeholder' : 'Type'}}) }}
+    {{ form_row(formFigure.description, { 'attr' : {'placeholder' : 'Contenu'}}) }}
+
+    <button type="submit" class="btn btn-primary">Modifier</button>
+
+    {{ form_end(formFigure) }}
+
+{% endblock %}
