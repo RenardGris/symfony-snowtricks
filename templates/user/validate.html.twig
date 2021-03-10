@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% if message %}
+    <h3>Votre compte a déjà été activé, vueillez vous connecter</h3>
+    {%  else %}
+    <h2>inscription validée</h2>
+    <div>
+        <span>Bonjour {{ user.username }}</span>
+        {% if user.validate %}
+        Votre compte est maintenant activée
+        {% else %}
+        Une erreur est survenue, veuillez essayer plus tard
+        {% endif %}
+    </div>
+    {% endif %}
+{% endblock %}
