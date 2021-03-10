@@ -40,10 +40,10 @@ class UserController extends AbstractController
      * @param Request $request
      * @param EntityManagerInterface $manager
      * @param UserPasswordEncoderInterface $encoder
+     * @param \Swift_Mailer $mailer
      * @return Response
-     *
      */
-    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder): Response
+    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, \Swift_Mailer $mailer): Response
     {
 
         $user = new User();
@@ -62,6 +62,7 @@ class UserController extends AbstractController
             $manager->persist($user);
             $manager->flush();
 
+            $this->sendValidationMail(user: $user, mailer: $mailer);
             return $this->redirectToRoute('login');
         }
 
