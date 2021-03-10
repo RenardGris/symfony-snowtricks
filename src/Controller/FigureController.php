@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\FigureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,13 +10,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class FigureController extends AbstractController
 {
     /**
-     * @Route("/figure", name="figure_index", methods={"GET"})
+     * @Route("/", name="figure_index", methods={"GET"})
+     * @param FigureRepository $repository
      * @return Response
      */
-    public function index(): Response
+    public function index(FigureRepository $repository): Response
     {
         return $this->render('figure/index.html.twig', [
-            'controller_name' => 'FigureController',
+            'figures' => $repository->findAll()
         ]);
     }
 
