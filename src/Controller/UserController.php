@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\ForgotPasswordType;
 use App\Form\RegisterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -95,14 +96,35 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/forget_password", name="forgot_password", methods={"GET"})
+     * @Route("/forget_password", name="forgot_password")
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param \Swift_Mailer $mailer
      * @return Response
      *
      */
-    public function forgotPassword(): Response
+    public function forgotPassword(Request $request, EntityManagerInterface $manager, \Swift_Mailer $mailer): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
+
+        $formForgetPassword = $this->createForm(ForgotPasswordType::class);
+
+        $formForgetPassword->handleRequest($request);
+
+        if($formForgetPassword->isSubmitted() && $formForgetPassword->isValid()){
+            $email = $formForgetPassword->get('email')->getData();
+
+            $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
+
+            //Changer le token de l'utilisateur pour eviter qu'l puisse changer de mot de passe a la suite avec la meme url
+
+            if($user){
+                $this->sendResetPasswordMail($user, $mailer);
+            }
+
+        }
+
+        return $this->render('user/forgot_password.html.twig', [
+            'formForgetPassword' => $formForgetPassword->createView(),
         ]);
     }
 
