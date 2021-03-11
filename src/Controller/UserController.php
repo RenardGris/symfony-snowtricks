@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\ForgotPasswordType;
 use App\Form\RegisterType;
+use App\Form\ResetPasswordType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -129,14 +130,28 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/reset_password", name="reset_password", methods={"GET"})
+     * @Route("/reset_password/{token}", name="reset_password")
+     * @param User $user
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param UserPasswordEncoderInterface $encoder
      * @return Response
-     *
      */
-    public function resetPassword(): Response
+    public function resetPassword(User $user, Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
+
+        $formResetPassword = $this->createForm(ResetPasswordType::class);
+        $formResetPassword->handleRequest($request);
+
+        if($formResetPassword->isSubmitted() && $formResetPassword->isValid()){
+            $password = $encoder->encodePassword($user, $formResetPassword->get('password')->getData());
+            $user->setPassword($password);
+            $manager->persist($user);
+            $manager->flush();
+        }
+
+        return $this->render('user/reset_password.html.twig', [
+            'formResetPassword' => $formResetPassword->createView(),
         ]);
     }
 
