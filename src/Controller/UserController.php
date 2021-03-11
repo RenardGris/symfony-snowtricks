@@ -139,5 +139,25 @@ class UserController extends AbstractController
         $mailer->send($message);
     }
 
+    /**
+     * @param User $user
+     * @param \Swift_Mailer $mailer
+     */
+    protected function sendResetPasswordMail(User $user, \Swift_Mailer $mailer) {
+
+        $message = (new \Swift_Message('Reset Password'))
+            ->setFrom('test@test.com')
+            ->setTo($user->getEmail())
+            ->setContentType("text/html")
+            ->setBody(
+                $this->renderView(
+                    'email/reset_password.html.twig',
+                    ['user' => $user]
+                )
+            );
+
+        $mailer->send($message);
+    }
+
 
 }
