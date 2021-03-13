@@ -121,6 +121,11 @@ class FigureController extends AbstractController
      */
     public function delete(Figure $figure, EntityManagerInterface $manager): \Symfony\Component\HttpFoundation\RedirectResponse
     {
+        $medias = $figure->getMedia();
+        foreach ($medias as $media){
+            unlink($this->getParameter('images_directory').'/'. $media->getLink());
+        }
+
         $manager->remove($figure);
         $manager->flush();
         return $this->redirectToRoute('figure_index',  ['figure' => $manager->getRepository(Figure::class)]);
