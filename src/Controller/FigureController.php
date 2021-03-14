@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Comment;
 use App\Entity\Figure;
+use App\Entity\Media;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\FigureType;
@@ -26,6 +27,56 @@ class FigureController extends AbstractController
         return $this->render('figure/index.html.twig', [
             'figures' => $repository->findAll()
         ]);
+    }
+
+    /**
+     * @Route("/figure/new", name="figure_store")
+     * @param Figure|null $figure
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
+    public function store(Figure $figure = null,Request $request, EntityManagerInterface $manager): Response
+    {
+
+        if(!$figure){
+            $figure = new Figure();
+        }
+
+        $form = $this->createForm(FigureType::class, $figure);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            !$figure->getId()
+                ? $figure->setCreatedAt(new \DateTime())->setAuthor($manager->getRepository(User::class)->find(60))
+                : null;
+
+            $images = $form->get('images')->getData();
+            $videos =  $form->get('videos')->getData();
+
+            // On boucle sur les images
+            foreach($images as $image){
+                $this->storeMediaToFigure($figure,$image, 'photo');
+            }
+            foreach($videos as $video){
+                $this->storeMediaToFigure($figure,$video, 'video');
+            }
+
+            $manager->persist($figure);
+            $manager->flush();
+
+            return $this->redirectToRoute('figure_show', [
+                'id' => $figure->getId(),
+            ]);
+
+        }
+
+        return $this->render('figure/store.html.twig', [
+            'formFigure' => $form->createView(),
+            'editMode' => $figure->getId() !== null,
+        ]);
+
     }
 
     /**
@@ -72,44 +123,6 @@ class FigureController extends AbstractController
 
         return $this->render('figure/update.html.twig', [
             'formFigure' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/figure/new", name="figure_store")
-     * @param Figure|null $figure
-     * @param Request $request
-     * @param EntityManagerInterface $manager
-     * @return Response
-     */
-    public function store(Figure $figure = null,Request $request, EntityManagerInterface $manager): Response
-    {
-
-        if(!$figure){
-            $figure = new Figure();
-        }
-
-        $form = $this->createForm(FigureType::class, $figure);
-
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            !$figure->getId()
-                ? $figure->setCreatedAt(new \DateTime())->setAuthor($manager->getRepository(User::class)->find(60))
-                : null;
-
-            $manager->persist($figure);
-            $manager->flush();
-
-            return $this->redirectToRoute('figure_show', [
-                'id' => $figure->getId(),
-            ]);
-
-        }
-
-        return $this->render('figure/store.html.twig', [
-            'formFigure' => $form->createView(),
-            'editMode' => $figure->getId() !== null,
         ]);
     }
 
