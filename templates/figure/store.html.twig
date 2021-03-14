@@ -12,6 +12,7 @@
     {{ form_row(formFigure.name, { 'attr' : {'placeholder' : 'Nom'}}) }}
     {{ form_row(formFigure.type, { 'attr' : {'placeholder' : 'Type'}}) }}
     {{ form_row(formFigure.images, { 'attr' : {'placeholder' : 'Images'}}) }}
+    {{ form_row(formFigure.videos, { 'attr' : {'placeholder' : 'Images'}}) }}
     {{ form_row(formFigure.description, { 'attr' : {'placeholder' : 'Contenu'}}) }}
 
     <button type="submit" class="btn btn-primary">
@@ -20,7 +21,6 @@
         {% else %}
             Ajouter
         {% endif %}
-
     </button>
 
     {{ form_end(formFigure) }}
