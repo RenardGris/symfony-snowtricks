@@ -109,7 +109,9 @@ class FigureController extends AbstractController
     public function update(Figure $figure, Request $request, EntityManagerInterface $manager): Response
     {
 
-        $form = $this->createForm(FigureType::class, $figure);
+        $form = $this->createForm(FigureType::class, $figure)
+            ->remove('images')
+            ->remove('videos');
 
         $form->handleRequest($request);
 
