@@ -1,15 +1,59 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>inscription</h1>
+<div class="row justify-content-center p-2">
+    <h2 class="col-12 col-md-10 text-center my-4">Registration</h2>
 
-    {{ form_start(formUserRegistration) }}
+    {{ form_start(formUserRegistration, {"attr":{"class":"col-12 col-md-10 col-lg-5 text-center border border-primary"}} )  }}
 
-    {{ form_row(formUserRegistration.username, {"label":"pseudo", "attr":{"placeholder":"nom d'utilisateur.."}}) }}
-    {{ form_row(formUserRegistration.email, {"label":"Email", "attr":{"placeholder":"Adresse email"}}) }}
-    {{ form_row(formUserRegistration.password, {"label":"Mot de passe", "attr":{"placeholder":"mot de passe !"}}) }}
-    {{ form_row(formUserRegistration.confirm_password, {"label":"Confirmation", "attr":{"placeholder":"confirmation du mot de passe"}}) }}
+    <div class="row justify-content-center mt-3">
+        <div class="col-12 text-center">
+                {{ form_label(formUserRegistration.username, "Username", {"label_attr":{"class":"mb-0"}}) }}
+        </div>
+        <div class="col-12 text-center">
+            {{ form_row(formUserRegistration.username,
+                {"label":false, "attr":{"class":"col-12 col-md-6 text-center my-0 registration_input"}}) }}
+        </div>
+    </div>
 
-    <button type="submit" class="btn btn-success">Valider</button>
+    <div class="row justify-content-center mt-3">
+        <div class="col-12 text-center">
+            {{ form_label(formUserRegistration.email, "Email", {"label_attr":{"class":"mb-0"}}) }}
+        </div>
+        <div class="col-12 text-center">
+            {{ form_row(formUserRegistration.email,
+                {"label":false, "attr":{"class":"col-12 col-md-6 text-center my-0 registration_input"}}) }}
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+        <div class="col-12 text-center">
+            {{ form_label(formUserRegistration.password, "Password", {"label_attr":{"class":"mb-0"}}) }}
+        </div>
+        <div class="col-12 text-center">
+            {{ form_row(formUserRegistration.password,
+                {"label":false, "attr":{"class":"col-12 col-md-6 text-center my-0 registration_input"}}) }}
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-3">
+        <div class="col-12 text-center">
+            {{ form_label(formUserRegistration.confirm_password, "Password confirmation", {"label_attr":{"class":"mb-0"}}) }}
+        </div>
+        <div class="col-12 text-center">
+            {{ form_row(formUserRegistration.confirm_password,
+                {"label":false, "attr":{ "class":"col-12 col-md-6 text-center my-0 registration_input"}}) }}
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <button type="submit" class="btn btn-info col-10 col-sm-6 col-md-3 col-lg-5">Create an account</button>
+    </div>
+
+    <div class="row justify-content-center mt-3 mb-3">
+        <a href="{{ path("login") }}" class="col-6 text-info">Already an account ?</a>
+    </div>
+
     {{ form_end(formUserRegistration) }}
+</div>
 {% endblock %}
