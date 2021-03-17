@@ -5,3 +5,11 @@
     -webkit-appearance:none;
     box-shadow: none !important;
 }
+#landing {
+    height: 100vh;
+    background: url("home_landing_page.jpg")no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
