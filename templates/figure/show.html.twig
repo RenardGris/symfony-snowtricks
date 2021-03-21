@@ -3,15 +3,59 @@
 {% block title %}Snowtricks!{% endblock %}
 
 {% block body %}
-    <article>
-        <h3>{{ figure.name }}</h3>
-        <div class="metadata">Crée le : {{ figure.createdAt | date('d-m-Y') }}</div>
-        <div class="content">
-            <img src="" alt="">
-            <p>{{ figure.description }}</p>
-        </div>
-        <a href="{{ path('figure_show', {'id' : figure.id}) }}" class="btn btn-primary">Lire la suite</a>
-    </article>
+    {% set favorite_img = figure.media|filter(img => (img.favorite is same as(true)) and (img.type is same as('photo'))) %}
+    {% set medias = figure.media|filter(img => (img.favorite is same as(false)) and (img.type is same as('photo'))) %}
+    <div class="row justify-content-center">
+
+        <article class="col-12 col-sm-10 col-sm-8 col-lg-8 col-xl-6 my-4 p-0" id="figure">
+            <div class="position-relative">
+            {% for img in favorite_img %}
+                <img src="/uploads/{{ img.link }}" alt="favorite_img" class="img-fluid">
+                <div class="mask flex-center position-absolute left-0 right-0" id="figure_title">
+                    <h3 class="text-center">{{ figure.name }}</h3>
+                </div>
+            {% endfor %}
+            </div>
+
+            <div class="medias">
+                {% for media in medias %}
+                    {% if media.type is same as('photo') %}
+                        <img src="/uploads/{{ media.link }}" alt="" style="width: 150px; height: 150px">
+                    {% elseif media.type is same as('video')  %}
+                        <img src="/uploads/{{ media.link }}" alt="" style="width: 120px; height: 120px">
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="row justify-content-center px-0 py-2 m-0">
+                <p class="col-12 col-lg-10 pt-4 text-justify">{{ figure.description }}</p>
+            </div>
+            <div class="row justify-content-center px-0 py-2 m-0">
+                <div class="col-4 metadata text-center font_smaller">
+                    <div class="row justify-content-center p-0 m-0">
+                        <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-left b-t-2">Style :</p>
+                    </div>
+                    <div class="row justify-content-center p-0 m-0">
+                        <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-right b-b-2">{{ figure.type }}</p>
+                    </div>
+                </div>
+                <div class="col-4 metadata text-center font_smaller">
+                    <div class="row justify-content-center p-0 m-0">
+                        <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-left b-t-2">Créé le :</p>
+                    </div>
+                    <div class="row justify-content-center p-0 m-0">
+                        <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-right b-b-2">{{ figure.createdAt | date('d-m-Y') }}</p>
+                    </div>
+                </div>
+                <div class="col-4 metadata text-center font_smaller">
+                    <div class="row justify-content-center p-0 m-0">
+                        <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-left b-t-2">Par :</p>
+                    </div>
+                    <div class="row justify-content-center p-0 m-0">
+                        <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-right b-b-2">{{ figure.author.username }}</p>
+                    </div>
+                </div>
+            </div>
 
     <hr/>
     {% embed 'comment/index.html.twig' %}
