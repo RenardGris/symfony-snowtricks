@@ -8,25 +8,56 @@
 {% endblock %}
 
 {% block body %}
-    <section class="row justify-content-center">
+    <section class="row justify-content-around mt-5 p-0" id="figure_list">
 
         {% for figure in figures %}
 
-            <div class="card col-3 m-2">
-                <h3 class="card-header"> {{ figure.name }}</h3>
-                <a class="btn btn-warning" href="{{ path('figure_update', {'id' : figure.id}) }}">Modifier</a>
-                <a class="btn btn-danger" href="{{ path('figure_delete', {'id' : figure.id}) }}">Delete</a>
-                <div class="card-body">
-                    <h6 class="metadata">Crée le : {{ figure.createdAt | date('d-m-Y') }}</h6>
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="d-block user-select-none" width="100%" height="200" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle">
-                    <rect width="100%" height="100%" fill="#868e96"></rect>
-                </svg>
-                <div class="card-body">
-                    <p class="card-text"> {{ figure.description }}</p>
-                </div>
-                <div class="card-footer text-muted">
-                    <a href="{{ path('figure_show', {'id' : figure.id}) }}" class="btn btn-primary">Lire la suite</a>
+            <div class="col-10 col-sm-4 col-md-3 col-lg-3 col-xl-2 mx-2 my-3">
+                <div class="card col-12 p-0 border-0">
+                    <div class="card-header row p-0">
+
+                        {% for media in figure.media %}
+                            {% if media.favorite is same as (true) %}
+                                <img src="uploads/{{ media.link }}" alt="image_figure" width="100%">
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+                    <div class="card-body row px-0 py-4">
+                        <div class="col-8">
+
+                                <h3 class="card-text">
+                                    <a href="{{ path('figure_show', {'id' : figure.id}) }}">
+                                        {{ figure.name }}
+                                    </a>
+                                </h3>
+                        </div>
+                        {% if app.user %}
+                            <div class="col-4">
+                                <div class="row">
+
+                                    <button type="button" class="btn btn-white py-0 px-1" onclick="{{ path('figure_update', {'id' : figure.id}) }}">
+                                        <i class='bi bi-pencil'></i>
+                                    </button>
+
+                                    <button type="button" class="btn btn-white py-0 px-1"
+                                            title=""
+                                            data-container="body"
+                                            data-toggle="popover"
+                                            data-placement="top"
+                                            data-html="true"
+                                            data-content="
+                                            <a class='justify-content-start' href='{{ path('figure_delete', {'id' : figure.id}) }}'>
+                                            <i class='bi bi-check2'></i>
+                                            </a>
+                                            <a class='close justify-content-end' data-dismiss='alert'>&times;</a>"
+                                            data-original-title="Supprimer ?">
+                                            <i class='bi bi-trash'></i>
+                                    </button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
 
