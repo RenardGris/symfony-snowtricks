@@ -51,5 +51,11 @@
         $(document).ready(function () {
             bsCustomFileInput.init()
         })
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+        $(document).on("click", ".popover .close" , function(){
+            $(this).parents(".popover").popover('hide');
+        });
     </script>
 {% endblock %}
