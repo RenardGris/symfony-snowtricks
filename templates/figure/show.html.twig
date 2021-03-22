@@ -4,7 +4,9 @@
 
 {% block body %}
     {% set favorite_img = figure.media|filter(img => (img.favorite is same as(true)) and (img.type is same as('photo'))) %}
-    {% set medias = figure.media|filter(img => (img.favorite is same as(false)) and (img.type is same as('photo'))) %}
+    {% set medias_img = figure.media|filter(img => (img.favorite is same as(false)) and (img.type is same as('photo'))) %}
+    {% set medias_vid = figure.media|filter(img => (img.favorite is same as(false)) and (img.type is same as('video'))) %}
+
     <div class="row justify-content-center">
 
         <article class="col-12 col-sm-10 col-md-10 col-lg-8 col-xl-6 my-4 p-0" id="figure">
