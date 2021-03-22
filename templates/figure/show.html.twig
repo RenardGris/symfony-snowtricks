@@ -7,7 +7,7 @@
     {% set medias = figure.media|filter(img => (img.favorite is same as(false)) and (img.type is same as('photo'))) %}
     <div class="row justify-content-center">
 
-        <article class="col-12 col-sm-10 col-sm-8 col-lg-8 col-xl-6 my-4 p-0" id="figure">
+        <article class="col-12 col-sm-10 col-md-10 col-lg-8 col-xl-6 my-4 p-0" id="figure">
             <div class="position-relative">
             {% for img in favorite_img %}
                 <img src="/uploads/{{ img.link }}" alt="favorite_img" class="img-fluid">
