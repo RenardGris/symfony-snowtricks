@@ -133,6 +133,7 @@ class FigureController extends AbstractController
         }
 
         return $this->render('figure/update.html.twig', [
+            'figure' => $figure,
             'formFigure' => $form->createView(),
         ]);
     }
