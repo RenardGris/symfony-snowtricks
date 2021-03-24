@@ -148,6 +148,8 @@ class UserController extends AbstractController
             $user->setPassword($password);
             $manager->persist($user);
             $manager->flush();
+
+            return $this->redirectToRoute('figure_index');
         }
 
         return $this->render('user/reset_password.html.twig', [
