@@ -92,7 +92,7 @@
                 <p class="col-12 col-lg-10 pt-4 text-justify">{{ figure.description }}</p>
             </div>
             <div class="row justify-content-center px-0 py-2 m-0">
-                <div class="col-4 metadata text-center font_smaller">
+                <div class="col-3 metadata text-center font_smaller">
                     <div class="row justify-content-center p-0 m-0">
                         <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-left b-t-2">Style :</p>
                     </div>
@@ -100,7 +100,7 @@
                         <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-right b-b-2">{{ figure.type }}</p>
                     </div>
                 </div>
-                <div class="col-4 metadata text-center font_smaller">
+                <div class="col-3 metadata text-center font_smaller">
                     <div class="row justify-content-center p-0 m-0">
                         <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-left b-t-2">Créé le :</p>
                     </div>
@@ -108,7 +108,7 @@
                         <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-right b-b-2">{{ figure.createdAt | date('d-m-Y') }}</p>
                     </div>
                 </div>
-                <div class="col-4 metadata text-center font_smaller">
+                <div class="col-3 metadata text-center font_smaller">
                     <div class="row justify-content-center p-0 m-0">
                         <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-left b-t-2">Par :</p>
                     </div>
@@ -116,6 +116,16 @@
                         <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-right b-b-2">{{ figure.author.username }}</p>
                     </div>
                 </div>
+                {% if figure.updatedAt is defined and figure.updatedAt is not null %}
+                <div class="col-3 metadata text-center font_smaller">
+                    <div class="row justify-content-center p-0 m-0">
+                        <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-left b-t-2">Modifié le :</p>
+                    </div>
+                    <div class="row justify-content-center p-0 m-0">
+                        <p class="col-12 col-sm-6 p-0 m-0 border-gradient border-gradient-blue-right b-b-2">{{  figure.updatedAt | date('d-m-Y') }}</p>
+                    </div>
+                </div>
+                {% endif %}
             </div>
 
             <hr/>
