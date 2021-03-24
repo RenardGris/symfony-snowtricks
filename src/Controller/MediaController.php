@@ -29,4 +29,19 @@ class MediaController extends AbstractController
 
     }
 
+    /**
+     * @Route("/media/{media}/favorite", name="media_switch_favorite")
+     * @param Media $media
+     * @param EntityManagerInterface $manager
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function switchToFavorite(Media $media, EntityManagerInterface $manager): RedirectResponse
+    {
+        $actualFav =  $manager->getRepository(Media::class)->findOneBy(['figure' => $media->getFigure()->getId(), 'favorite' => true]);
+        $actualFav->setFavorite(false);
+        $media->setFavorite(true);
+        $manager->flush();
+        return $this->redirectToRoute('figure_update',  ['id' => $media->getFigure()->getId()]);
+    }
+
 }
