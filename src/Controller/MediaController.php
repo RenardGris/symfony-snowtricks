@@ -22,7 +22,7 @@ class MediaController extends AbstractController
      */
     public function delete(Media $media, EntityManagerInterface $manager): RedirectResponse
     {
-        if($media->getLink() !== 'default.jpeg'){
+        if($media->getType() === 'photo' && $media->getLink() !== 'default.jpeg'){
             unlink($this->getParameter('images_directory').'/'. $media->getLink());
         }
         $manager->remove($media);
@@ -55,20 +55,23 @@ class MediaController extends AbstractController
      */
     public function update(Media $media, EntityManagerInterface $manager, Request $request): RedirectResponse
     {
-        $form = $this->createForm(UpdateMediaType::class, $media);
+        $form = $this->createForm(UpdateMediaType::class);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
 
-            $image = $form->get('image')->getData();
-            $fichier = md5(uniqid()).'.'.$image->guessExtension();
-            $image->move(
-                $this->getParameter('images_directory'),
-                $fichier
-            );
+            $fichier = $form->get('video')->getData();
+            if($media->getType() === 'photo'){
+                $image = $form->get('image')->getData();
+                $fichier = md5(uniqid()).'.'.$image->guessExtension();
+                $image->move(
+                    $this->getParameter('images_directory'),
+                    $fichier
+                );
 
-            if($media->getLink() !== 'default.jpeg'){
-                unlink($this->getParameter('images_directory').'/'. $media->getLink());
+                if($media->getLink() !== 'default.jpeg'){
+                    unlink($this->getParameter('images_directory').'/'. $media->getLink());
+                }
             }
 
             $media->setLink($fichier);
