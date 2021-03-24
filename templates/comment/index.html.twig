@@ -1,4 +1,31 @@
 {% block body %}
+    <div class="row justify-content-center p-0 mx-0 py-4">
+        {% if app.user %}
+            <div class="col-12">
+                {{ form_start(formComment, {"attr":{"class":"col-12 text-center"}} ) }}
+
+                <div class="row justify-content-center mt-3">
+                    <div class="col-12 text-center">
+                        {{ form_label(formComment.content, "Commentaire", {"label_attr":{"class":"mb-0"}}) }}
+                    </div>
+                    <div class="col-12 text-center">
+                        {{ form_row(formComment.content,
+                            {"label":false, "attr":{"class":"col-12 col-md-8 my-0 registration_input"}}) }}
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success mt-4">Commenter</button>
+                {{ form_end(formComment) }}
+            </div>
+        {% else %}
+            <div class="col-12 text-center">
+                    <span>
+                        Veuillez vous <a href="{{ path('login') }}" class="text-info">connecter</a> pour commenter
+                    </span>
+            </div>
+        {% endif %}
+    </div>
+
     <div class="row justify-content-center p-0 m-0" id="comments">
         <h3> {{ figure.comments | length }} Commentaires</h3>
         {% for comment in figure.comments %}
@@ -27,31 +54,4 @@
         </div>
         {% endfor %}
     </div>
-
-        <div class="row justify-content-center p-0 mx-0 py-4">
-            {% if app.user %}
-                <div class="col-12">
-                {{ form_start(formComment, {"attr":{"class":"col-12 text-center"}} ) }}
-
-                <div class="row justify-content-center mt-3">
-                    <div class="col-12 text-center">
-                        {{ form_label(formComment.content, "Commentaire", {"label_attr":{"class":"mb-0"}}) }}
-                    </div>
-                    <div class="col-12 text-center">
-                        {{ form_row(formComment.content,
-                            {"label":false, "attr":{"class":"col-12 col-md-8 my-0 registration_input"}}) }}
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-success mt-4">Commenter</button>
-                {{ form_end(formComment) }}
-            </div>
-            {% else %}
-                <div class="col-12 text-center">
-                    <span>
-                        Veuillez vous <a href="{{ path('login') }}" class="text-info">connecter</a> pour commenter
-                    </span>
-                </div>
-            {% endif %}
-        </div>
 {% endblock %}
