@@ -16,7 +16,8 @@ class UpdateMediaType extends AbstractType
                 'multiple' => false,
                 'mapped' => false,
                 'required' => false
-            ]);
+            ])
+            ->add('video');
     }
 
 }
