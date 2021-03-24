@@ -2,7 +2,6 @@
 
 {% block title %}Snowtricks!{% endblock %}
 
-{%  form_theme formUpdateMedia 'bootstrap_4_layout.html.twig' %}
 {%  form_theme formFigure 'bootstrap_4_layout.html.twig' %}
 
 {% block body %}
@@ -43,12 +42,10 @@
                             {% for img in medias_img %}
                                 {% if loop.first %}
                                     <div class="carousel-item active">
-                                        <img src="/uploads/{{ img.link }}" alt="figure_img" class="d-block w-100">
-                                    </div>
                                 {% else %}
                                     <div class="carousel-item">
+                                {% endif %}
                                         <img src="/uploads/{{ img.link }}" alt="figure_img" class="d-block w-100">
-
                                         <div class="text-center">
                                             <a class="btn btn-white py-0 px-1" href='{{ path('media_switch_favorite', {'media' : img.id}) }}'>
                                                 <i class='bi bi-star'></i>
@@ -59,40 +56,11 @@
                                             <a class="btn btn-white py-0 px-1" href='{{ path('media_delete', {'media' : img.id}) }}'>
                                                 <i class='bi bi-trash'></i>
                                             </a>
-
-                                            <!-- Modal -->
-                                            <div class="modal fade" id="modalEditMedia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLongTitle">Modifier Image</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        {{ form_start(formUpdateMedia, {"action": path('media_update', {'media' : img.id}) }) }}
-                                                        <div class="row modal-body justify-content-center mt-3">
-                                                            <div class="col-10 text-center">
-                                                                {{ form_row(formUpdateMedia.image,
-                                                                    {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0 registration_input"}}) }}
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
-                                                            <button type="submit" class="btn btn-primary">Modifier</button>
-                                                        </div>
-                                                        {{ form_end(formUpdateMedia) }}
-                                                    </div>
-                                                </div>
-                                            </div>
-
                                         </div>
 
                                     </div>
-                                {% endif %}
-
                             {% endfor %}
-                        </div>
+                                    </div>
                         <a class="carousel-control-prev" href="#carouselImgFigure" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
@@ -110,13 +78,20 @@
                             {% for video in medias_vid %}
                                 {% if loop.first %}
                                     <div class="carousel-item active embed-responsive embed-responsive-16by9">
-                                        <iframe class="embed-responsive-item" src="{{ video.link }}"></iframe>
-                                    </div>
                                 {% else %}
                                     <div class="carousel-item embed-responsive embed-responsive-16by9">
-                                        <iframe class="embed-responsive-item" src="{{ video.link }}"></iframe>
-                                    </div>
                                 {% endif %}
+                                    <iframe class="embed-responsive-item" src="{{ video.link }}"></iframe>
+                                        <div class="text-center">
+                                            <a class="btn btn-white py-0 px-1" data-toggle="modal" data-target="#modalEditMediaVideo">
+                                                <i class='bi bi-pencil'></i>
+                                            </a>
+                                            <a class="btn btn-white py-0 px-1" href='{{ path('media_delete', {'media' : video.id}) }}'>
+                                                <i class='bi bi-trash'></i>
+                                            </a>
+
+                                        </div>
+                                    </div>
                             {% endfor %}
                         </div>
                         <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
