@@ -8,6 +8,7 @@ use App\Entity\Media;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\FigureType;
+use App\Form\UpdateMediaType;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -135,6 +136,7 @@ class FigureController extends AbstractController
         return $this->render('figure/update.html.twig', [
             'figure' => $figure,
             'formFigure' => $form->createView(),
+            'formUpdateMedia' => $this->createForm(UpdateMediaType::class)->createView(),
         ]);
     }
 
