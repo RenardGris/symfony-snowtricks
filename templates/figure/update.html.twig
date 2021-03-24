@@ -187,12 +187,9 @@
             </div>
 
             <div class="row justify-content-end mt-3 mx-0 p-2">
-                <button type="submit" class="btn btn-danger p-2 m-2" onclick="">Supprimer</button>
+                <a class="btn btn-danger p-2 m-2" href="{{ path("figure_delete", {"id": figure.id }) }}">Supprimer</a>
                 <button type="submit" class="btn btn-primary p-2 m-2">Modifier</button>
             </div>
-
-
-
 
             {{ form_end(formFigure) }}
 
