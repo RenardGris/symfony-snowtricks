@@ -150,7 +150,7 @@ class FigureController extends AbstractController
     {
         $medias = $figure->getMedia();
         foreach ($medias as $media){
-            if($media->getLink() !== 'default.jpeg'){
+            if($media->getType() === 'photo' && $media->getLink() !== 'default.jpeg'){
                 unlink($this->getParameter('images_directory').'/'. $media->getLink());
             }
         }
