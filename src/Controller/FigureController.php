@@ -111,7 +111,8 @@ class FigureController extends AbstractController
 
         $form = $this->createForm(FigureType::class, $figure)
             ->remove('images')
-            ->remove('videos');
+            ->remove('videos')
+            ->remove('name');
 
         $form->handleRequest($request);
 
