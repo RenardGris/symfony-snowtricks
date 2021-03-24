@@ -176,3 +176,7 @@ i {
         display: none;
     }
 }
+
+#video{
+    height: calc(100% - 27px);
+}
