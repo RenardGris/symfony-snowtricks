@@ -84,6 +84,12 @@ i {
     font-style: oblique;
 }
 
+#figure_btn {
+    top:0;
+    right: 0;
+    padding: 0.5em;
+}
+
 #figure_list > div {
     box-shadow: 15px 15px 2px 1px rgba(0, 0, 255, .2);
     border: 1px solid black;

@@ -13,6 +13,16 @@
             <div class="position-relative">
             {% for img in favorite_img %}
                 <img src="/uploads/{{ img.link }}" alt="favorite_img" class="img-fluid">
+                {% if app.user %}
+                    <div class="position-absolute" id="figure_btn">
+                        <a class="btn btn-white py-0 px-1" href='{{ path('figure_update', {'id' : figure.id}) }}'>
+                            <i class='bi bi-pencil'></i>
+                        </a>
+                        <a class="btn btn-white py-0 px-1" href='{{ path('figure_delete', {'id' : figure.id}) }}'>
+                            <i class='bi bi-trash'></i>
+                        </a>
+                    </div>
+                {% endif %}
                 <div class="mask flex-center position-absolute left-0 right-0" id="figure_title">
                     <h3 class="text-center">{{ figure.name }}</h3>
                 </div>
