@@ -65,7 +65,7 @@ class UserController extends AbstractController
             $manager->flush();
 
             $this->sendValidationMail(user: $user, mailer: $mailer);
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('figure_index');
         }
 
         return $this->render('user/register.html.twig', [
