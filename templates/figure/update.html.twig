@@ -47,6 +47,9 @@
                                         <img src="/uploads/{{ img.link }}" alt="figure_img" class="d-block w-100">
 
                                         <div class="text-center">
+                                            <a class="btn btn-white py-0 px-1" href='{{ path('media_switch_favorite', {'media' : img.id}) }}'>
+                                                <i class='bi bi-star'></i>
+                                            </a>
                                             <a class="btn btn-white py-0 px-1" href='{{ path('figure_update', {'id' : figure.id}) }}'>
                                                 <i class='bi bi-pencil'></i>
                                             </a>
