@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\Medias;
+use App\Entity\Media;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Medias|null find($id, $lockMode = null, $lockVersion = null)
- * @method Medias|null findOneBy(array $criteria, array $orderBy = null)
- * @method Medias[]    findAll()
- * @method Medias[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Media|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Media|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Media[]    findAll()
+ * @method Media[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class MediaRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Medias::class);
+        parent::__construct($registry, Media::class);
     }
 
     // /**
