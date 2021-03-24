@@ -56,8 +56,16 @@ class FigureController extends AbstractController
             $videos =  $form->get('videos')->getData();
 
             // On boucle sur les images
+            if(sizeof($images) > 0)
             foreach($images as $image){
                 $this->storeMediaToFigure($figure,$image, 'photo');
+            } else {
+                $media = new Media();
+                $media->setLink('default.jpeg');
+                $media->setType('photo');
+                $media->setAddedAt(new \DateTime());
+                $media->setFavorite(true);
+                $figure->addMedium($media);
             }
             foreach($videos as $video){
                 $this->storeMediaToFigure($figure,$video, 'video');
