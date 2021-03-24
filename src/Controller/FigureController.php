@@ -138,7 +138,9 @@ class FigureController extends AbstractController
     {
         $medias = $figure->getMedia();
         foreach ($medias as $media){
-            unlink($this->getParameter('images_directory').'/'. $media->getLink());
+            if($media->getLink() !== 'default.jpeg'){
+                unlink($this->getParameter('images_directory').'/'. $media->getLink());
+            }
         }
 
         $manager->remove($figure);
