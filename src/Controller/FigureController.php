@@ -57,9 +57,11 @@ class FigureController extends AbstractController
             $videos =  $form->get('videos')->getData();
 
             // On boucle sur les images
-            if(sizeof($images) > 0)
-            foreach($images as $image){
-                $this->storeMediaToFigure($figure,$image, 'photo');
+            if(sizeof($images) > 0) {
+                $mc = new  MediaController();
+                foreach($images as $image) {
+                    $mc->storeMediaToFigure($figure, $image, 'photo');
+                }
             } else {
                 $media = new Media();
                 $media->setLink('default.jpeg');
@@ -68,8 +70,9 @@ class FigureController extends AbstractController
                 $media->setFavorite(true);
                 $figure->addMedium($media);
             }
+            $mc = new  MediaController();
             foreach($videos as $video){
-                $this->storeMediaToFigure($figure,$video, 'video');
+                $mc->storeMediaToFigure($figure,$video, 'video');
             }
 
             $manager->persist($figure);
@@ -160,23 +163,6 @@ class FigureController extends AbstractController
         return $this->redirectToRoute('figure_index',  ['figure' => $manager->getRepository(Figure::class)]);
     }
 
-    protected function storeMediaToFigure($figure, $image, $type){
-        // On génère un nouveau nom de fichier
-        $fichier = md5(uniqid()).'.'.$image->guessExtension();
 
-        // On copie le fichier dans le dossier uploads
-        $image->move(
-            $this->getParameter('images_directory'),
-            $fichier
-        );
-
-        // On crée l'image dans la base de données
-        $media = new Media();
-        $media->setLink($fichier);
-        $media->setType($type);
-        $media->setAddedAt(new \DateTime());
-        $media->setFavorite(false);
-        $figure->addMedium($media);
-    }
 
 }
