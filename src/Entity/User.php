@@ -233,7 +233,7 @@ class User implements UserInterface
 
     public function getSalt()
     {
-        // TODO: Implement getSalt() method.
+        return md5($this->getEmail());
     }
 
     public function eraseCredentials()
