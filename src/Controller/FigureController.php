@@ -85,6 +85,8 @@ class FigureController extends AbstractController
             $manager->persist($figure);
             $manager->flush();
 
+            $this->addFlash('success', "C'est validé ! En piste !");
+
             return $this->redirectToRoute('figure_show', [
                 'id' => $figure->getId(),
             ]);
