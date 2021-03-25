@@ -1,4 +1,5 @@
 {% block body %}
+    {% set nextPageComments = 1 %}
     <div class="row justify-content-center p-0 mx-0 py-4">
         {% if app.user %}
             <div class="col-12">
@@ -53,5 +54,14 @@
             </div>
         </div>
         {% endfor %}
+    </div>
+    <div class="row justify-content-center mt-5 p-0">
+        <a class="btn btn-info col-4 col-sm-3 col-md-2 col-lg-2 col-xl-2 mx-2 my-3"
+           id="load_more_comments"
+           data-next="{{ nextPageComments }}"
+           data-figure="{{ figure.id }}"
+        >
+            Load more
+        </a>
     </div>
 {% endblock %}
