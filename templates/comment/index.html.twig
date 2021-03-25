@@ -35,7 +35,7 @@
                 <div class="col-4 col-md-2 p-0">
                     <div class="row justify-content-center p-0 m-0">
                         <div class="col-12 text-center p-0">
-                            <img src="/uploads/avatar/{{ comment.author.avatar }}"
+                            <img src="{{ asset(avatar_directory ~  comment.author.avatar ) }} "
                                  alt="user_img"
                                  width="75"
                                  height="75"
