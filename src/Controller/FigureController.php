@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\FigureType;
 use App\Form\UpdateMediaType;
+use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -95,9 +96,10 @@ class FigureController extends AbstractController
     /**
      * @Route("/figure/{id}", name="figure_show", methods={"GET"})
      * @param Figure $figure
+     * @param CommentRepository $commentRepository
      * @return Response
      */
-    public function show(Figure $figure): Response
+    public function show(Figure $figure, CommentRepository $commentRepository): Response
     {
 
         $comment = new Comment();
@@ -108,6 +110,7 @@ class FigureController extends AbstractController
 
         return $this->render('figure/show.html.twig', [
             'figure' => $figure,
+            'comments' => $commentRepository->paginateComments(1, $figure->getId()),
             'formComment' => $formComment->createView(),
         ]);
     }
