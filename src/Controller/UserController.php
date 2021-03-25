@@ -59,7 +59,7 @@ class UserController extends AbstractController
             $user->setPassword($hash);
             $user->setAvatar('http://placeimg.com/120/120/any')
                 ->setValidate(false)
-                ->setToken(md5($user->getEmail()));
+                ->setNewToken();
 
             $manager->persist($user);
             $manager->flush();
@@ -84,7 +84,8 @@ class UserController extends AbstractController
 
         $message = 'Votre compte a déjà été validée';
         if(!$user->getValidate()){
-            $user->setValidate(true);
+            $user->setValidate(true)
+                ->setNewToken();
             $manager->persist($user);
             $manager->flush();
             $message = null;
@@ -145,7 +146,8 @@ class UserController extends AbstractController
 
         if($formResetPassword->isSubmitted() && $formResetPassword->isValid()){
             $password = $encoder->encodePassword($user, $formResetPassword->get('password')->getData());
-            $user->setPassword($password);
+            $user->setPassword($password)
+                ->setNewToken();
             $manager->persist($user);
             $manager->flush();
 
