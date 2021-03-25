@@ -22,6 +22,27 @@ class FigureRepository extends ServiceEntityRepository
         parent::__construct($registry, Figure::class);
     }
 
+    public function paginateFigure(int $page)
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->orderBy('f.createdAt', 'DESC')
+            ->getQuery();
+        $page === 1 ? $first = 0 : $first = ($page-1) * self::LIMIT_PER_PAGE;
+        $qb->setFirstResult($first)
+            ->setMaxResults(self::LIMIT_PER_PAGE);
+
+        return $qb->getResult();
+    }
+
+    public function lastPage(): float|bool
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->select('count(f.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+        return ceil($qb / self::LIMIT_PER_PAGE);
+    }
+
     // /**
     //  * @return Figure[] Returns an array of Figure objects
     //  */
