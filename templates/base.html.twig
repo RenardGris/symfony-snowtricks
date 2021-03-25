@@ -67,6 +67,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             bsCustomFileInput.init()
@@ -80,5 +81,26 @@
         function showMedias() {
             document.getElementById("medias").style.display = "flex";
         }
+        $(document).ready(function () {
+            const loadBtn = document.getElementById("btn_load_more");
+            let nextPage = $(loadBtn).data("next");
+
+            loadBtn.addEventListener("click", function (e) {
+                const container = $("#figure_list");
+                let requestedPage = nextPage + 1
+                $.ajax({
+                    method: "POST",
+                    url: "/figure/load_more",
+                    data : 'page=' + requestedPage,
+                    success(response) {
+                        container.append(response.nextFigure);
+
+                        if (response.pages === false) {
+                            loadBtn.style.display = "none";
+                        }
+                    }
+                });
+            });
+        });
     </script>
 {% endblock %}
