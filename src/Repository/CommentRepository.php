@@ -21,6 +21,29 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
+    public function paginateComments(int $page, int $figureId)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->where('c.figure = ' . $figureId)
+            ->orderBy('c.createdAt', 'DESC')
+            ->getQuery();
+        $page === 1 ? $first = 0 : $first = ($page-1) * self::LIMIT_PER_PAGE;
+        $qb->setFirstResult($first)
+            ->setMaxResults(self::LIMIT_PER_PAGE);
+
+        return $qb->getResult();
+    }
+
+    public function lastPageComments(int $figureId): float|bool
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->select('count(c.id)')
+            ->where('c.figure = ' . $figureId)
+            ->getQuery()
+            ->getSingleScalarResult();
+        return ceil($qb / self::LIMIT_PER_PAGE);
+    }
+
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */
