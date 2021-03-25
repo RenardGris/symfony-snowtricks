@@ -50,7 +50,7 @@ class FigureController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             !$figure->getId()
-                ? $figure->setCreatedAt(new \DateTime())->setAuthor($manager->getRepository(User::class)->find(60))
+                ? $figure->setCreatedAt(new \DateTime())->setAuthor($manager->getRepository(User::class)->find($user)->id)
                 : null;
 
             $images = $form->get('images')->getData();
