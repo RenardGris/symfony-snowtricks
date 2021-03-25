@@ -26,7 +26,7 @@ class FigureController extends AbstractController
     public function index(FigureRepository $repository): Response
     {
         return $this->render('figure/index.html.twig', [
-            'figures' => $repository->findAll()
+            'figures' => $repository->paginateFigure(1)
         ]);
     }
 
