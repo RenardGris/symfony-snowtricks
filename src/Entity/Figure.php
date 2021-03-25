@@ -68,6 +68,11 @@ class Figure
      */
     private $updatedAt;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -210,4 +215,17 @@ class Figure
 
         return $this;
     }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $slug)));
+
+        return $this;
+    }
+
 }
