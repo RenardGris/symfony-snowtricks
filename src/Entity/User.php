@@ -240,4 +240,8 @@ class User implements UserInterface
     {
         // TODO: Implement eraseCredentials() method.
     }
+
+    public function setNewToken(){
+        $this->setToken(md5(uniqid(). $this->getSalt()));
+    }
 }
