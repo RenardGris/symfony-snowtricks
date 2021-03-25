@@ -102,5 +102,29 @@
                 });
             });
         });
+        $(document).ready(function () {
+            const loadBtn = document.getElementById("load_more_comments");
+            let nextPage = $(loadBtn).data("next");
+            let figureId = $(loadBtn).data("figure");
+
+
+            loadBtn.addEventListener("click", function (e) {
+                const container = $("#comments");
+                let requestedPage = nextPage + 1
+                $.ajax({
+                    method: "POST",
+                    url: "/comment/load_more",
+                    data : 'page=' + requestedPage + '&figure_id=' + figureId,
+                    success(response) {
+                        container.append(response.nextComments);
+
+                        if (response.page === false) {
+                            loadBtn.style.display = "none";
+                        }
+                    }
+                });
+            });
+        });
+
     </script>
 {% endblock %}
