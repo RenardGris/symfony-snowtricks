@@ -14,6 +14,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FigureRepository extends ServiceEntityRepository
 {
+
+    protected const LIMIT_PER_PAGE = 15;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Figure::class);
