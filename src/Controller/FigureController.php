@@ -82,13 +82,14 @@ class FigureController extends AbstractController
                 $mc->storeMediaToFigure($figure,$video, 'video');
             }
 
+            $figure->setSlug($figure->getName());
             $manager->persist($figure);
             $manager->flush();
 
             $this->addFlash('success', "C'est validé ! En piste !");
 
             return $this->redirectToRoute('figure_show', [
-                'id' => $figure->getId(),
+                'slug' => $figure->getSlug(),
             ]);
 
         }
@@ -101,7 +102,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/{id}", name="figure_show", methods={"GET"})
+     * @Route("/figure/{slug}", name="figure_show", methods={"GET"})
      * @param Figure $figure
      * @param CommentRepository $commentRepository
      * @return Response

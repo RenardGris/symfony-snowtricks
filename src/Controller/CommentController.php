@@ -41,7 +41,7 @@ class CommentController extends AbstractController
             $manager->persist($comment);
             $manager->flush($comment);
 
-            return $this->redirectToRoute('figure_show', ['id' => $figure->getId()]);
+            return $this->redirectToRoute('figure_show', ['slug' => $figure->getSlug()]);
         }
 
         return $this->render('comment/index.html.twig', [
