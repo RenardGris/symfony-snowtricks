@@ -1,0 +1,51 @@
+{% for figure in figures %}
+
+    <div class="col-10 col-sm-4 col-md-3 col-lg-3 col-xl-2 mx-2 my-3">
+        <div class="card col-12 p-0 border-0">
+            <div class="card-header row p-0">
+                {% for media in figure.media %}
+                    {% if media.favorite is same as (true) %}
+                        <img src="uploads/{{ media.link }}" alt="image_figure" width="100%">
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+            <div class="card-body row px-0 py-4">
+                <div class="col-8">
+                    <h3 class="card-text">
+                        <a href="{{ path('figure_show', {'id' : figure.id}) }}">
+                            {{ figure.name }}
+                        </a>
+                    </h3>
+                </div>
+                {% if app.user %}
+                    <div class="col-4 p-0">
+                        <div class="row m-0 justify-content-end">
+                            <a href='{{ path('figure_update', {'id' : figure.id}) }}'>
+                                <button type="button" class="btn btn-white py-0 px-1">
+                                    <i class='bi bi-pencil'></i>
+                                </button>
+                            </a>
+
+                            <button type="button" class="btn btn-white py-0 px-1"
+                                    title=""
+                                    data-container="body"
+                                    data-toggle="popover"
+                                    data-placement="top"
+                                    data-html="true"
+                                    data-content="
+                                           <a class='justify-content-start' href='{{ path('figure_delete', {'id' : figure.id}) }}'>
+                                           <i class='bi bi-check2'></i>
+                                           </a>
+                                           <a class='close justify-content-end' data-dismiss='alert'>&times;</a>"
+                                    data-original-title="Supprimer ?">
+                                <i class='bi bi-trash'></i>
+                            </button>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+
