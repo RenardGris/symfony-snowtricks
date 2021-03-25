@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class FigureController extends AbstractController
 {
@@ -37,9 +38,10 @@ class FigureController extends AbstractController
      * @param Figure|null $figure
      * @param Request $request
      * @param EntityManagerInterface $manager
+     * @param UserInterface $user
      * @return Response
      */
-    public function store(Figure $figure = null,Request $request, EntityManagerInterface $manager): Response
+    public function store(Figure $figure = null,Request $request, EntityManagerInterface $manager, UserInterface $user): Response
     {
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
@@ -54,7 +56,8 @@ class FigureController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             !$figure->getId()
-                ? $figure->setCreatedAt(new \DateTime())->setAuthor($manager->getRepository(User::class)->find($user)->id)
+                ? $figure->setCreatedAt(new \DateTime())
+                        ->setAuthor($user)
                 : null;
 
             $images = $form->get('images')->getData();
