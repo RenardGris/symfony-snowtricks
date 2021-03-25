@@ -12,6 +12,7 @@ use App\Form\UpdateMediaType;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -163,6 +164,25 @@ class FigureController extends AbstractController
         return $this->redirectToRoute('figure_index',  ['figure' => $manager->getRepository(Figure::class)]);
     }
 
+    /**
+     * @Route("/figure/load_more", name="figure_load_more")
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
+    public function loadMore(Request $request, EntityManagerInterface $manager): Response
+    {
+        $page = $request->request->get('page');
 
+        $repo = $manager->getRepository(Figure::class);
+        $figures = $repo->paginateFigure($page);
+        $lastPage = $repo->lastPage();
+
+        return new JsonResponse(                    [
+            'nextFigure' =>  $this->render('figure/load_more.html.twig', ['figures'=> $figures])->getContent(),
+            'pages' => $page < $lastPage ? $lastPage : false
+        ], 200);
+
+    }
 
 }
