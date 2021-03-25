@@ -42,6 +42,8 @@ class FigureController extends AbstractController
     public function store(Figure $figure = null,Request $request, EntityManagerInterface $manager): Response
     {
 
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         if(!$figure){
             $figure = new Figure();
         }
@@ -125,6 +127,8 @@ class FigureController extends AbstractController
     public function update(Figure $figure, Request $request, EntityManagerInterface $manager): Response
     {
 
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $form = $this->createForm(FigureType::class, $figure)
             ->remove('images')
             ->remove('videos')
@@ -155,6 +159,9 @@ class FigureController extends AbstractController
      */
     public function delete(Figure $figure, EntityManagerInterface $manager): \Symfony\Component\HttpFoundation\RedirectResponse
     {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $medias = $figure->getMedia();
         foreach ($medias as $media){
             if($media->getType() === 'photo' && $media->getLink() !== 'default.jpeg'){
