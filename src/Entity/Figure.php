@@ -27,16 +27,18 @@ class Figure
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min="3", max="255", minMessage="Au moins 3 caractères")
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $type;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min="10", max="255", minMessage="Au moins 10 caractères")
      */
     private $description;
 
