@@ -25,6 +25,11 @@ class UserController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        $error = $authenticationUtils->getLastAuthenticationError();
+        if($error){
+            $this->addFlash('error_login', $error);
+        }
+
         return $this->render('user/login.html.twig');
     }
 
