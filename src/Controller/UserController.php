@@ -62,7 +62,7 @@ class UserController extends AbstractController
             $hash = $encoder->encodePassword($user, $user->getPassword());
 
             $user->setPassword($hash);
-            $user->setAvatar('http://placeimg.com/120/120/any')
+            $user->setAvatar(array_rand(['avatar-1.jpg','avatar-2.jpg','avatar-3.jpg','avatar-4.jpg'], 1))
                 ->setValidate(false)
                 ->setNewToken();
 
