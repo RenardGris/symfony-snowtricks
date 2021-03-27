@@ -29,6 +29,12 @@ class MediaController extends AbstractController
         if($media->getType() === 'photo' && $media->getLink() !== 'default.jpeg'){
             unlink($this->getParameter('images_directory').'/'. $media->getLink());
         }
+
+        $figure = $media->getFigure();
+        if(sizeof($figure->getMedia()) === 0){
+            $this->storeDefaultImg($figure);
+        }
+
         $manager->remove($media);
         $manager->flush();
         return $this->redirectToRoute('figure_update',  ['id' => $media->getFigure()->getId()]);
