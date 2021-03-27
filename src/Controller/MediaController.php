@@ -105,7 +105,11 @@ class MediaController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-        $newFav =  $manager->getRepository(Media::class)->findOneBy(['figure' => $media->getFigure()->getId(), 'favorite' => false]);
+        $newFav =  $manager->getRepository(Media::class)->findOneBy([
+            'figure' => $media->getFigure()->getId(),
+            'favorite' => false,
+            'type' => 'photo'
+        ]);
         if($newFav){
             $media->setFavorite(false);
             $newFav->setFavorite(true);
