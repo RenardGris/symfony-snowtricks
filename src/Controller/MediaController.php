@@ -178,5 +178,17 @@ class MediaController extends AbstractController
         return $this->redirectToRoute('figure_update',  ['id' => $figure->getId()]);
     }
 
+    /**
+     * @param $figure
+     */
+    public function storeDefaultImg($figure){
+        $media = new Media();
+        $media->setLink('default.jpeg');
+        $media->setType('photo');
+        $media->setAddedAt(new \DateTime());
+        $media->setFavorite(true);
+        $figure->addMedium($media);
+    }
+
 
 }
