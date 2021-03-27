@@ -154,6 +154,7 @@ class FigureController extends AbstractController
             'figure' => $figure,
             'formFigure' => $form->createView(),
             'formUpdateMedia' => $this->createForm(UpdateMediaType::class),
+            'formAddImage' => $this->createForm(StoreMediaType::class)->createView(),
         ]);
     }
 
