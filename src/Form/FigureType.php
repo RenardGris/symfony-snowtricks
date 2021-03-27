@@ -15,7 +15,9 @@ class FigureType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
+            ->add('name', TextType::class, [
+                'required' => true
+            ])
             ->add('type', ChoiceType::class, [
                 'choices'  => [
                     'Grabs' => 'Grabs',
@@ -26,7 +28,9 @@ class FigureType extends AbstractType
                 ],
                 'required' => true
             ])
-            ->add('description')
+            ->add('description', TextType::class, [
+                'required' => true
+            ])
             ->add('images', FileType::class, [
                 'multiple' => true,
                 'mapped' => false,
