@@ -16,7 +16,16 @@ class FigureType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('type')
+            ->add('type', ChoiceType::class, [
+                'choices'  => [
+                    'Grabs' => 'Grabs',
+                    'Rotation' => 'Rotation',
+                    'Flips' => 'Flips',
+                    'Slides' => 'Slides',
+                    'One foot' => 'One foot',
+                ],
+                'required' => true
+            ])
             ->add('description')
             ->add('images', FileType::class, [
                 'multiple' => true,
