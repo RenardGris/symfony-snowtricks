@@ -20,7 +20,7 @@ class MediaController extends AbstractController
      * @Route("/media/{media}/delete", name="media_delete")
      * @param Media $media
      * @param EntityManagerInterface $manager
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function delete(Media $media, EntityManagerInterface $manager): RedirectResponse
     {
@@ -39,7 +39,7 @@ class MediaController extends AbstractController
      * @Route("/media/{media}/favorite", name="media_switch_favorite")
      * @param Media $media
      * @param EntityManagerInterface $manager
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function switchToFavorite(Media $media, EntityManagerInterface $manager): RedirectResponse
     {
@@ -57,7 +57,7 @@ class MediaController extends AbstractController
      * @param Media $media
      * @param EntityManagerInterface $manager
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function update(Media $media, EntityManagerInterface $manager, Request $request): RedirectResponse
     {
@@ -93,7 +93,7 @@ class MediaController extends AbstractController
      * @Route("/media/{media}/remove-favorite", name="media_remove_favorite")
      * @param Media $media
      * @param EntityManagerInterface $manager
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function removeFavorite(Media $media, EntityManagerInterface $manager): RedirectResponse
     {
@@ -111,6 +111,12 @@ class MediaController extends AbstractController
     }
 
 
+    /**
+     * @param $figure
+     * @param $image
+     * @param $type
+     * @param $directory
+     */
     public function storeMediaToFigure($figure, $image, $type, $directory){
 
         $fichier = $image;
@@ -138,9 +144,9 @@ class MediaController extends AbstractController
      * @param Figure $figure
      * @param Request $request
      * @param EntityManagerInterface $manager
-
+     * @return RedirectResponse
      */
-    public function store(Figure $figure,Request $request, EntityManagerInterface $manager)
+    public function store(Figure $figure,Request $request, EntityManagerInterface $manager): RedirectResponse
     {
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
