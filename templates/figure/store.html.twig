@@ -45,13 +45,26 @@
             </div>
 
             <div class="row justify-content-center mt-3">
-                <div class="col-12 text-center">
-                    {{ form_label(formFigure.videos, "Videos", {"label_attr":{"class":"mb-0"}}) }}
+
+                <div class="col-12">
+                    <ul id="video-fields-list"
+                        class="row list-group"
+                        data-prototype="{{ form_widget(formFigure.videos.vars.prototype)|e }}"
+                        data-widget-tags="{{ '<li class="col-12 my-1"></li>'|e }}"
+                        data-widget-counter="{{ formFigure.videos|length }}">
+                        {% for videoField in formFigure.videos %}
+                            <li class="col-12">
+                                {{ form_errors(videoField) }}
+                                {{ form_widget(videoField,  {"attr":{"class":"col-12 col-md-12 text-center my-0 registration_input"}}) }}
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
-                <div class="col-12 text-center">
-                    {{ form_widget(formFigure.videos,
-                        {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0 registration_input"}}) }}
-                </div>
+                <button type="button"
+                        class="btn btn-white border border-info add-video col-10 col-sm-8 col-md-6 col-lg-4 my-2"
+                        data-list-selector="#video-fields-list">
+                    Ajouter une video
+                </button>
             </div>
 
             <div class="row justify-content-center mt-3">
