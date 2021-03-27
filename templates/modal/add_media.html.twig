@@ -1,0 +1,52 @@
+<div class="modal fade" id="modalAddMedia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Ajouter des medias</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {{ form_start(formAddImage, { "action":path('media_store', {'figure' : figure.id}), 'multipart': true } ) }}
+            <div class="modal-body justify-content-center mt-3">
+                <div class="row justify-content-center mt-3">
+                    <div class="col-12 text-center">
+                        {{ form_label(formAddImage.images, "Images", {"label_attr":{"class":"mb-0"}}) }}
+                    </div>
+                    <div class="col-12 text-center">
+                        {{ form_widget(formAddImage.images,
+                            {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0"}}) }}
+                    </div>
+                </div>
+                <div class="row justify-content-center mt-3">
+
+                    <div class="col-12">
+                        <ul id="video-fields-list"
+                            class="row list-group"
+                            data-prototype="{{ form_widget(formAddImage.video.vars.prototype)|e }}"
+                            data-widget-tags="{{ '<li class="col-12 my-1"></li>'|e }}"
+                            data-widget-counter="{{ formAddImage.video|length }}">
+                            {% for videoField in formAddImage.video %}
+                                <li class="col-12">
+                                    {{ form_errors(videoField) }}
+                                    {{ form_widget(videoField, {"attr":{"class":"col-12 col-md-12 text-center my-0"}} ) }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <button type="button"
+                            class="btn btn-info add-video col-6"
+                            data-list-selector="#video-fields-list">
+                        Ajouter une video
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                <button type="submit" class="btn btn-primary">Ajouter</button>
+            </div>
+            {{ form_end(formAddImage) }}
+        </div>
+    </div>
+</div>
+
