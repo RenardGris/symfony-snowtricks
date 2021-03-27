@@ -8,6 +8,7 @@ use App\Entity\Media;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\FigureType;
+use App\Form\StoreMediaType;
 use App\Form\UpdateMediaType;
 use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
@@ -67,7 +68,7 @@ class FigureController extends AbstractController
             if(sizeof($images) > 0) {
                 $mc = new  MediaController();
                 foreach($images as $image) {
-                    $mc->storeMediaToFigure($figure, $image, 'photo');
+                    $mc->storeMediaToFigure($figure, $image, 'photo', $this->getParameter('images_directory'));
                 }
             } else {
                 $media = new Media();
@@ -78,8 +79,10 @@ class FigureController extends AbstractController
                 $figure->addMedium($media);
             }
             $mc = new  MediaController();
-            foreach($videos as $video){
-                $mc->storeMediaToFigure($figure,$video, 'video');
+            if(sizeof($videos) > 0){
+                foreach($videos as $video){
+                    $mc->storeMediaToFigure($figure,$video, 'video', $this->getParameter('images_directory'));
+                }
             }
 
             $figure->setSlug($figure->getName());
