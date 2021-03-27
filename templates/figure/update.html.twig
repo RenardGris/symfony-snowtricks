@@ -17,10 +17,7 @@
                     <img src="/uploads/{{ img.link }}" alt="favorite_img" class="img-fluid">
                     {% if app.user %}
                         <div class="position-absolute" id="figure_btn">
-                            <a class="btn btn-white py-0 px-1" href='{{ path('figure_update', {'id' : figure.id}) }}'>
-                                <i class='bi bi-pencil'></i>
-                            </a>
-                            <a class="btn btn-white py-0 px-1" href='{{ path('figure_delete', {'id' : figure.id}) }}'>
+                            <a class="btn btn-white py-0 px-1" href='{{ path('media_remove_favorite', {'media' : img.id}) }}'>
                                 <i class='bi bi-trash'></i>
                             </a>
                         </div>
@@ -40,11 +37,7 @@
                     <div id="carouselImgFigure" class="carousel slide" data-interval="false">
                         <div class="carousel-inner">
                             {% for img in medias_img %}
-                                {% if loop.first %}
-                                    <div class="carousel-item active">
-                                {% else %}
-                                    <div class="carousel-item">
-                                {% endif %}
+                                    <div class="carousel-item {% if loop.first  %}active{% endif %}">
                                         <img src="/uploads/{{ img.link }}" alt="figure_img" class="d-block w-100">
                                         <div class="text-center">
                                             <a class="btn btn-white py-0 px-1" href='{{ path('media_switch_favorite', {'media' : img.id}) }}'>
@@ -57,7 +50,6 @@
                                                 <i class='bi bi-trash'></i>
                                             </a>
                                         </div>
-
                                         {% set formImage = formUpdateMedia.createView %}
                                         <div class="modal fade" id="modalEditMedia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -88,7 +80,7 @@
 
                                     </div>
                             {% endfor %}
-                                    </div>
+                        </div>
                         <a class="carousel-control-prev" href="#carouselImgFigure" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
@@ -104,23 +96,19 @@
                     <div id="carouselExampleControls" class="carousel slide" data-interval="false">
                         <div class="carousel-inner">
                             {% for video in medias_vid %}
-                                {% if loop.first %}
-                                    <div class="carousel-item active embed-responsive embed-responsive-16by9">
-                                {% else %}
-                                    <div class="carousel-item embed-responsive embed-responsive-16by9">
-                                {% endif %}
+                                <div class="carousel-item embed-responsive embed-responsive-16by9 {% if loop.first  %}active{% endif %}">
                                     <iframe class="embed-responsive-item" src="{{ video.link }}" id="video"></iframe>
-                                        <div class="text-center">
-                                            <a class="btn btn-white py-0 px-1" data-toggle="modal" data-target="#modalEditMediaVideo">
-                                                <i class='bi bi-pencil'></i>
-                                            </a>
-                                            <a class="btn btn-white py-0 px-1" href='{{ path('media_delete', {'media' : video.id}) }}'>
-                                                <i class='bi bi-trash'></i>
-                                            </a>
-                                        </div>
+                                    <div class="text-center">
+                                        <a class="btn btn-white py-0 px-1" data-toggle="modal" data-target="#modalEditMediaVideo">
+                                            <i class='bi bi-pencil'></i>
+                                        </a>
+                                        <a class="btn btn-white py-0 px-1" href='{{ path('media_delete', {'media' : video.id}) }}'>
+                                            <i class='bi bi-trash'></i>
+                                        </a>
+                                    </div>
 
-                                        {% set formVideo = formUpdateMedia.createView %}
-                                        <div class="modal fade" id="modalEditMediaVideo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    {% set formVideo = formUpdateMedia.createView %}
+                                    <div class="modal fade" id="modalEditMediaVideo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -146,9 +134,8 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                    </div>
-                            {% endfor %}
+                                </div>
+                          {% endfor %}
                         </div>
                         <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
