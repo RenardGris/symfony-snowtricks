@@ -89,6 +89,27 @@ class MediaController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/media/{media}/remove-favorite", name="media_remove_favorite")
+     * @param Media $media
+     * @param EntityManagerInterface $manager
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function removeFavorite(Media $media, EntityManagerInterface $manager): RedirectResponse
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $newFav =  $manager->getRepository(Media::class)->findOneBy(['figure' => $media->getFigure()->getId(), 'favorite' => false]);
+        if($newFav){
+            $media->setFavorite(false);
+            $newFav->setFavorite(true);
+            $manager->persist($media);
+            $manager->flush();
+        }
+
+        return $this->redirectToRoute('figure_update',  ['id' => $media->getFigure()->getId()]);
+    }
+
 
     public function storeMediaToFigure($figure, $image, $type){
         // On génère un nouveau nom de fichier
