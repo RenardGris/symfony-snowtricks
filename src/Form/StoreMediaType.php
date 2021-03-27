@@ -28,6 +28,7 @@ class StoreMediaType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
+                'label' => false,
             ]);
     }
 
