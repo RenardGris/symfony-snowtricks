@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Figure;
 use App\Entity\Media;
+use App\Form\StoreMediaType;
 use App\Form\UpdateMediaType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -105,6 +107,45 @@ class MediaController extends AbstractController
         $media->setAddedAt(new \DateTime());
         $media->setFavorite(false);
         $figure->addMedium($media);
+    }
+
+    /**
+     * @Route("figure/{figure}/media/store", name="media_store")
+     * @param Figure $figure
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+
+     */
+    public function store(Figure $figure,Request $request, EntityManagerInterface $manager)
+    {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $form = $this->createForm(StoreMediaType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $types = [
+                'photo' => $form->get('images')->getData(),
+                'video' => $form->get('video')->getData()
+            ];
+
+            foreach ($types as $k => $medias){
+                if(isset($medias)){
+                    foreach ($medias as $media){
+                        if(isset($media)){
+                            $this->storeMediaToFigure($figure, $media, $k, $this->getParameter('images_directory'));
+                        }
+                    }
+                }
+            }
+
+            $manager->persist($figure);
+            $manager->flush();
+        }
+
+        return $this->redirectToRoute('figure_update',  ['id' => $figure->getId()]);
     }
 
 
