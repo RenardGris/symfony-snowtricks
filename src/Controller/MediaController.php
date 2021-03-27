@@ -112,14 +112,17 @@ class MediaController extends AbstractController
 
 
     public function storeMediaToFigure($figure, $image, $type, $directory){
-        // On génère un nouveau nom de fichier
-        $fichier = md5(uniqid()).'.'.$image->guessExtension();
 
-        // On copie le fichier dans le dossier uploads
-        $image->move(
-            $directory,
-            $fichier
-        );
+        $fichier = $image;
+        if($type === 'photo') {
+            // On génère un nouveau nom de fichier
+            $fichier = md5(uniqid()).'.'.$image->guessExtension();
+            // On copie le fichier dans le dossier uploads
+            $image->move(
+                $directory,
+                $fichier
+            );
+        }
 
         // On crée l'image dans la base de données
         $media = new Media();
