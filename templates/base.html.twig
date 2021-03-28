@@ -30,14 +30,19 @@
             <li class="nav-item">
                 <a class="nav-link border-light border-right" href="{{ path("figure_index") }}">Figures</a>
             </li>
+            {% if app.user %}
+                <li class="nav-item border-light border-right">
+                    <a class="nav-link" href="{{ path("figure_store") }}">Ajouter une figure</a>
+                </li>
+            {% endif %}
             <li class="nav-item">
                 <a class="nav-link border-light border-right" href="{{ path("login") }}">Sign in</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item border-light border-right">
                 <a class="nav-link" href="{{ path("register") }}">Sign up</a>
             </li>
             {% if app.user %}
-            <li class="nav-item border-light border-left">
+            <li class="nav-item border-light border-right">
                 <a class="nav-link" href="{{ path("logout") }}">Logout</a>
             </li>
             {% endif %}
