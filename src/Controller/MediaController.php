@@ -31,7 +31,7 @@ class MediaController extends AbstractController
         }
 
         $figure = $media->getFigure();
-        if(sizeof($figure->getMedia()) === 0){
+        if(count($figure->getMedia()) === 0){
             $this->storeDefaultImg($figure);
         }
 

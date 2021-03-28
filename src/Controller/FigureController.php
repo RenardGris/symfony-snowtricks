@@ -66,7 +66,7 @@ class FigureController extends AbstractController
 
             // On boucle sur les images
             $mc = new  MediaController();
-            if(sizeof($images) > 0) {
+            if(count($images) > 0) {
                 foreach($images as $image) {
                     $mc->storeMediaToFigure($figure, $image, 'photo', $this->getParameter('images_directory'));
                 }
@@ -74,7 +74,7 @@ class FigureController extends AbstractController
                 $mc->storeDefaultImg($figure);
             }
 
-            if(sizeof($videos) > 0){
+            if(count($videos) > 0){
                 foreach($videos as $video){
                     $mc->storeMediaToFigure($figure,$video, 'video', $this->getParameter('images_directory'));
                 }
