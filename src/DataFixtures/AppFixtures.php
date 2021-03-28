@@ -2,12 +2,14 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use App\Entity\Figure;
 use App\Entity\Media;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
@@ -20,7 +22,7 @@ class AppFixtures extends Fixture
 
         $this->loadUser($faker,$manager);
         $this->loadFigures($manager);
-
+        $this->loadComments($manager);
 
 
         $manager->flush();
@@ -32,13 +34,14 @@ class AppFixtures extends Fixture
         for ($i = 0; $i <= 5; $i++){
 
             $user = New User();
+            $encoded = password_hash('demo', PASSWORD_DEFAULT);
 
             $user->setUsername($faker->firstName)
                 ->setEmail($faker->email)
-                ->setAvatar($faker->imageUrl())
-                ->setPassword($faker->password())
+                ->setAvatar($faker->randomElement(['avatar-1.jpg','avatar-2.jpg','avatar-3.jpg','avatar-4.jpg']))
+                ->setPassword($encoded)
                 ->setValidate(1)
-                ->setToken(md5($user->getEmail()));
+                ->setNewToken();
 
             $manager->persist($user);
 
@@ -51,36 +54,112 @@ class AppFixtures extends Fixture
     public function loadFigures(ObjectManager $manager){
         $figures = [
             [
-                'name' => "mute",
+                'name' => "Mute",
                 'description' => " saisie de la carre frontside de la planche entre les deux pieds avec la main avant",
                 'type' => "Grab",
                 'medias' => [
                     [
-                        'type' => "img",
-                        'link' => "https://upload.wikimedia.org/wikipedia/commons/2/2b/Shakedown_2008_Figure_3.jpg",
+                        'type' => "photo",
+                        'link' => "mute.jpg",
                         'favorite' => false,
                     ],
                     [
-                        'type' => "img",
-                        'link' => "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Shakedown_2008_Figure_1a.jpg/1200px-Shakedown_2008_Figure_1a.jpg",
+                        'type' => "photo",
+                        'link' => "default.jpeg",
                         'favorite' => true,
+                    ],
+                    [
+                        'type' => "video",
+                        'link' => "https://youtube.com/embed/CflYbNXZU3Q",
+                        'favorite' => false,
                     ]
                 ]
 
             ],
             [
-                'name' => "melancholie ",
+                'name' => "Melancholie",
                 'description' => " saisie de la carre backside de la planche, entre les deux pieds, avec la main avant ;",
                 'type' => "Grab",
                 'medias' => [
                     [
-                        'type' => "img",
-                        'link' => "https://upload.wikimedia.org/wikipedia/commons/2/2b/Shakedown_2008_Figure_3.jpg",
+                        'type' => "photo",
+                        'link' => "default.jpeg",
                         'favorite' => true,
                     ],
                     [
-                        'type' => "img",
-                        'link' => "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Shakedown_2008_Figure_1a.jpg/1200px-Shakedown_2008_Figure_1a.jpg",
+                        'type' => "photo",
+                        'link' => "melancholy.jpg",
+                        'favorite' => false,
+                    ],
+                    [
+                        'type' => "video",
+                        'link' => "https://youtube.com/embed/KEdFwJ4SWq4",
+                        'favorite' => false,
+                    ]
+                ]
+            ],
+            [
+                'name' => "Indy",
+                'description' => "saisie de la carre frontside de la planche, entre les deux pieds, avec la main arrière",
+                'type' => "Grab",
+                'medias' => [
+                    [
+                        'type' => "photo",
+                        'link' => "default.jpeg",
+                        'favorite' => true,
+                    ],
+                    [
+                        'type' => "photo",
+                        'link' => "indy.jpeg",
+                        'favorite' => false,
+                    ],
+                    [
+                        'type' => "video",
+                        'link' => "https://youtube.com/embed/iKkhKekZNQ8",
+                        'favorite' => false,
+                    ]
+                ]
+            ],
+            [
+                'name' => "stalefish ",
+                'description' => "saisie de la carre backside de la planche entre les deux pieds avec la main arrière",
+                'type' => "Grab",
+                'medias' => [
+                    [
+                        'type' => "photo",
+                        'link' => "default.jpeg",
+                        'favorite' => true,
+                    ],
+                    [
+                        'type' => "photo",
+                        'link' => "stalefish.jpg",
+                        'favorite' => false,
+                    ],
+                    [
+                        'type' => "video",
+                        'link' => "https://youtube.com/embed/f9FjhCt_w2U",
+                        'favorite' => false,
+                    ]
+                ]
+            ],
+            [
+                'name' => "Truck driver",
+                'description' => "saisie du carre avant et carre arrière avec chaque main (comme tenir un volant de voiture)",
+                'type' => "Grab",
+                'medias' => [
+                    [
+                        'type' => "photo",
+                        'link' => "default.jpeg",
+                        'favorite' => true,
+                    ],
+                    [
+                        'type' => "photo",
+                        'link' => "truck-driver.jpeg",
+                        'favorite' => false,
+                    ],
+                    [
+                        'type' => "video",
+                        'link' => "https://youtube.com/embed/6tgjY8baFT0",
                         'favorite' => false,
                     ]
                 ]
@@ -91,13 +170,18 @@ class AppFixtures extends Fixture
                 'type' => "Grab",
                 'medias' => [
                     [
-                        'type' => "img",
-                        'link' => "https://upload.wikimedia.org/wikipedia/commons/2/2b/Shakedown_2008_Figure_3.jpg",
+                        'type' => "photo",
+                        'link' => "japan-air.png",
                         'favorite' => true,
                     ],
                     [
-                        'type' => "img",
-                        'link' => "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Shakedown_2008_Figure_1a.jpg/1200px-Shakedown_2008_Figure_1a.jpg",
+                        'type' => "photo",
+                        'link' => "default.jpeg",
+                        'favorite' => false,
+                    ],
+                    [
+                        'type' => "video",
+                        'link' => "https://youtube.com/embed/CzDjM7h_Fwo",
                         'favorite' => false,
                     ]
                 ]
@@ -105,16 +189,21 @@ class AppFixtures extends Fixture
             [
                 'name' => "180",
                 'description' => "un 180 désigne un demi-tour, soit 180 degrés d'angle ",
-                'type' => "rotations",
+                'type' => "Rotation",
                 'medias' => [
                     [
-                        'type' => "img",
-                        'link' => "https://upload.wikimedia.org/wikipedia/commons/2/2b/Shakedown_2008_Figure_3.jpg",
+                        'type' => "photo",
+                        'link' => "default.jpeg",
                         'favorite' => true,
                     ],
                     [
-                        'type' => "img",
-                        'link' => "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Shakedown_2008_Figure_1a.jpg/1200px-Shakedown_2008_Figure_1a.jpg",
+                        'type' => "photo",
+                        'link' => "default.jpeg",
+                        'favorite' => false,
+                    ],
+                    [
+                        'type' => "video",
+                        'link' => "https://youtube.com/embed/6tgjY8baFT0",
                         'favorite' => false,
                     ]
                 ]
@@ -125,13 +214,66 @@ class AppFixtures extends Fixture
                 'type' => "Rotation",
                 'medias' => [
                     [
-                        'type' => "img",
-                        'link' => "https://upload.wikimedia.org/wikipedia/commons/2/2b/Shakedown_2008_Figure_3.jpg",
+                        'type' => "photo",
+                        'link' => "default.jpeg",
                         'favorite' => true,
                     ],
                     [
-                        'type' => "img",
-                        'link' => "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Shakedown_2008_Figure_1a.jpg/1200px-Shakedown_2008_Figure_1a.jpg",
+                        'type' => "photo",
+                        'link' => "default.jpeg",
+                        'favorite' => false,
+                    ],
+                    [
+                        'type' => "video",
+                        'link' => "https://youtube.com/embed/6tgjY8baFT0",
+                        'favorite' => false,
+                    ]
+                ]
+            ],
+            [
+                'name' => "Front flip",
+                'description' => "Un  frontflip est une rotation verticale vers l'avant.
+                Il est possible de faire plusieurs flips à la suite, et d'ajouter un grab à la rotation. Les flips agrémentés d'une vrille existent aussi (Mac Twist, Hakon Flip...), mais de manière beaucoup plus rare, et se confondent souvent avec certaines rotations horizontales désaxées.
+                Néanmoins, en dépit de la difficulté technique relative d'une telle figure, le danger de retomber sur la tête ou la nuque est réel et conduit certaines stations de ski à interdire de telles figures dans ses snowparks.",
+                'type' => "Flips",
+                'medias' => [
+                    [
+                        'type' => "photo",
+                        'link' => "frontflip.jpg",
+                        'favorite' => true,
+                    ],
+                    [
+                        'type' => "photo",
+                        'link' => "default.jpeg",
+                        'favorite' => false,
+                    ],
+                    [
+                        'type' => "video",
+                        'link' => "https://youtube.com/embed/9_zC7CdvYu4",
+                        'favorite' => false,
+                    ]
+                ]
+            ],
+            [
+                'name' => "Back flip",
+                'description' => "Un  frontflip est une rotation verticale vers l'arrière.
+                Il est possible de faire plusieurs flips à la suite, et d'ajouter un grab à la rotation. Les flips agrémentés d'une vrille existent aussi (Mac Twist, Hakon Flip...), mais de manière beaucoup plus rare, et se confondent souvent avec certaines rotations horizontales désaxées.
+                Néanmoins, en dépit de la difficulté technique relative d'une telle figure, le danger de retomber sur la tête ou la nuque est réel et conduit certaines stations de ski à interdire de telles figures dans ses snowparks.",
+                'type' => "Flips",
+                'medias' => [
+                    [
+                        'type' => "photo",
+                        'link' => "backflip.jpg",
+                        'favorite' => true,
+                    ],
+                    [
+                        'type' => "photo",
+                        'link' => "default.jpeg",
+                        'favorite' => false,
+                    ],
+                    [
+                        'type' => "video",
+                        'link' => "https://youtube.com/embed/5bpzng08nzk",
                         'favorite' => false,
                     ]
                 ]
@@ -151,6 +293,7 @@ class AppFixtures extends Fixture
                 ->setType($fig['type'])
                 ->setDescription($fig['description'])
                 ->setCreatedAt(new \DateTime())
+                ->setSlug($figure->getName())
                 ->setAuthor($author);
 
             $manager->persist($figure);
@@ -169,6 +312,32 @@ class AppFixtures extends Fixture
 
         $manager->flush();
     }
+
+    public function loadComments(ObjectManager $manager){
+        $figures = $manager->getRepository(Figure::class)->findAll();
+        $authors = $manager->getRepository(User::class)->findAll();
+
+        foreach ($figures as $figure) {
+
+            $nbComments = random_int(5,20);
+            for ($i=0;$i<$nbComments;$i++){
+
+                $comment = new Comment();
+
+                $author = $authors[random_int(1,5)];
+
+                $comment->setAuthor($author)
+                    ->setFigure($figure)
+                    ->setContent('Commentaire de test')
+                    ->setCreatedAt(new \DateTime());
+                $manager->persist($comment);
+            }
+
+        }
+
+        $manager->flush();
+    }
+
 
 
 
