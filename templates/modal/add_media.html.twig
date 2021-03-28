@@ -26,10 +26,10 @@
                             data-prototype="{{ form_widget(formAddImage.video.vars.prototype)|e }}"
                             data-widget-tags="{{ '<li class="col-12 my-1"></li>'|e }}"
                             data-widget-counter="{{ formAddImage.video|length }}">
-                            {% for videoField in formAddImage.video %}
+                            {% for video_field in formAddImage.video %}
                                 <li class="col-12">
-                                    {{ form_errors(videoField) }}
-                                    {{ form_widget(videoField, {"attr":{"class":"col-12 col-md-12 text-center my-0"}} ) }}
+                                    {{ form_errors(video_field) }}
+                                    {{ form_widget(video_field, {"attr":{"class":"col-12 col-md-12 text-center my-0"}} ) }}
                                 </li>
                             {% endfor %}
                         </ul>

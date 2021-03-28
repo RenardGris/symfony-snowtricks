@@ -50,7 +50,7 @@
                                                 <i class='bi bi-trash'></i>
                                             </a>
                                         </div>
-                                        {% set formImage = formUpdateMedia.createView %}
+                                        {% set form_image = formUpdateMedia.createView %}
                                         <div class="modal fade" id="modalEditMedia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
@@ -60,12 +60,12 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    {{ form_start(formImage, { "action":path('media_update', {'media' : img.id}) } ) }}
+                                                    {{ form_start(form_image, { "action":path('media_update', {'media' : img.id}) } ) }}
                                                     <div class="row modal-body justify-content-center mt-3">
                                                         <div class="col-10 text-center">
-                                                            {{ form_widget(formImage.image,
+                                                            {{ form_widget(form_image.image,
                                                                 {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0"} }) }}
-                                                            {{ form_widget(formImage.video,
+                                                            {{ form_widget(form_image.video,
                                                                 {"label":false, "attr":{"class":"d-none"} }) }}
                                                         </div>
                                                     </div>
@@ -73,7 +73,7 @@
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                                                         <button type="submit" class="btn btn-primary">Modifier</button>
                                                     </div>
-                                                    {{ form_end(formImage) }}
+                                                    {{ form_end(form_image) }}
                                                 </div>
                                             </div>
                                         </div>
@@ -107,7 +107,7 @@
                                         </a>
                                     </div>
 
-                                    {% set formVideo = formUpdateMedia.createView %}
+                                    {% set form_video = formUpdateMedia.createView %}
                                     <div class="modal fade" id="modalEditMediaVideo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
@@ -117,12 +117,12 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    {{ form_start(formVideo, { "action":path('media_update', {'media' : video.id}) } ) }}
+                                                    {{ form_start(form_video, { "action":path('media_update', {'media' : video.id}) } ) }}
                                                     <div class="row modal-body justify-content-center mt-3">
                                                         <div class="col-10 text-center">
-                                                            {{ form_widget(formVideo.video,
+                                                            {{ form_widget(form_video.video,
                                                                 {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0"}, "value":video.link }) }}
-                                                            {{ form_widget(formVideo.image,
+                                                            {{ form_widget(form_video.image,
                                                                 {"label":false, "attr":{"class":"d-none"} }) }}
                                                         </div>
                                                     </div>
@@ -130,7 +130,7 @@
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                                                         <button type="submit" class="btn btn-primary">Modifier</button>
                                                     </div>
-                                                    {{ form_end(formVideo) }}
+                                                    {{ form_end(form_video) }}
                                                 </div>
                                             </div>
                                         </div>
