@@ -1,9 +1,9 @@
 .registration_input {
     border: none;
     border-bottom: 1px solid black;
-    outline: 0px !important;
+    outline: 0px;
     -webkit-appearance: none;
-    box-shadow: none !important;
+    box-shadow: none;
 }
 
 #landing {
@@ -149,7 +149,7 @@ i {
 
 @media (min-width: 800px) and (max-width: 850px) {
     .navbar:not(.top-nav-collapse) {
-        background: #444 !important;
+        background: #444;
     }
 }
 
