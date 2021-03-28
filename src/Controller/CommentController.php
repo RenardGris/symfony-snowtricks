@@ -57,8 +57,8 @@ class CommentController extends AbstractController
      */
     public function loadMore(Request $request, EntityManagerInterface $manager): JsonResponse
     {
-        $page = intval($request->request->get('page'));
-        $figureId = intval($request->request->get('figure_id'));
+        $page = (int)$request->request->get('page');
+        $figureId = (int)$request->request->get('figure_id');
 
         $repo = $manager->getRepository(Comment::class);
         $comments = $repo->paginateComments($page, $figureId);
