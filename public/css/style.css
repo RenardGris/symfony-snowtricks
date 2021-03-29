@@ -15,6 +15,33 @@
   background-size: cover;
 }
 
+#landing_error_404 {
+  background: url("error_404.jpg") no-repeat center center fixed;
+  height: 100vh;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#landing_error_403 {
+  background: url("error_403.jpg") no-repeat center center fixed;
+  height: 100vh;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+#landing_error_other {
+  background: url("error_2.jpeg") no-repeat center center fixed;
+  height: 100vh;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
 .user_landing {
   position: absolute;
   top: 0;
