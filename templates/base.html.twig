@@ -158,5 +158,16 @@
                 newElem.appendTo(list);
             });
         });
+        $("#figure_images").change(function() {
+
+            let files = $('#figure_images').prop("files")
+            let images = $.map(files, function(val) { return val.name; });
+            console.log(files)
+            images.forEach(img => {
+                let choice = new Option(img, img);
+                console.log(img);
+                $("#figure_favorite").append(choice);
+            })
+        });
     </script>
 {% endblock %}

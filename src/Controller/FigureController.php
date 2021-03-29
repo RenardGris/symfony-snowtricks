@@ -63,12 +63,14 @@ class FigureController extends AbstractController
 
             $images = $form->get('images')->getData();
             $videos =  $form->get('videos')->getData();
+            $favoriteChoice = $request->request->get('figure_favorite');
 
             // On boucle sur les images
             $mc = new  MediaController();
             if(count($images) > 0) {
                 foreach($images as $image) {
-                    $mc->storeMediaToFigure($figure, $image, 'photo', $this->getParameter('images_directory'));
+                    $favoriteChoice === $image->getClientOriginalName() ? $favorite = true : $favorite = false;
+                    $mc->storeMediaToFigure($figure, $image, 'photo', $this->getParameter('images_directory'), $favorite);
                 }
             } else {
                 $mc->storeDefaultImg($figure);
