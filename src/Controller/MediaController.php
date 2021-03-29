@@ -126,8 +126,9 @@ class MediaController extends AbstractController
      * @param $image
      * @param $type
      * @param $directory
+     * @param bool $favorite
      */
-    public function storeMediaToFigure($figure, $image, $type, $directory){
+    public function storeMediaToFigure($figure, $image, $type, $directory, $favorite = false){
 
         $fichier = $image;
         if($type === 'photo') {
@@ -145,7 +146,7 @@ class MediaController extends AbstractController
         $media->setLink($fichier);
         $media->setType($type);
         $media->setAddedAt(new \DateTime());
-        $media->setFavorite(false);
+        $media->setFavorite($favorite);
         $figure->addMedium($media);
     }
 
