@@ -59,12 +59,14 @@ class UserController extends AbstractController
             $user->setPassword($hash);
             $user->setAvatar('http://placeimg.com/120/120/any')
                 ->setValidate(false)
-                ->setToken(md5($user->getEmail()));
+                ->setNewToken();
 
             $manager->persist($user);
             $manager->flush();
 
-            $this->sendValidationMail(user: $user, mailer: $mailer);
+            $emailView = 'email/register_validation.html.twig';
+            $object = 'Validez votre inscription';
+            $this->sendEmail(user: $user, mailer: $mailer, emailView: $emailView, object: $object);
             return $this->redirectToRoute('figure_index');
         }
 
@@ -84,7 +86,8 @@ class UserController extends AbstractController
 
         $message = 'Votre compte a déjà été validée';
         if(!$user->getValidate()){
-            $user->setValidate(true);
+            $user->setValidate(true)
+                ->setNewToken();
             $manager->persist($user);
             $manager->flush();
             $message = null;
@@ -116,10 +119,10 @@ class UserController extends AbstractController
 
             $user = $manager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-            //Changer le token de l'utilisateur pour eviter qu'l puisse changer de mot de passe a la suite avec la meme url
-
             if($user){
-                $this->sendResetPasswordMail($user, $mailer);
+                $emailView = 'email/reset_password.html.twig';
+                $object = 'Reset Password';
+                $this->sendEmail(user: $user, mailer: $mailer, emailView: $emailView, object: $object);
             }
 
         }
@@ -145,7 +148,8 @@ class UserController extends AbstractController
 
         if($formResetPassword->isSubmitted() && $formResetPassword->isValid()){
             $password = $encoder->encodePassword($user, $formResetPassword->get('password')->getData());
-            $user->setPassword($password);
+            $user->setPassword($password)
+                ->setNewToken();
             $manager->persist($user);
             $manager->flush();
 
@@ -161,42 +165,23 @@ class UserController extends AbstractController
     /**
      * @param User $user
      * @param \Swift_Mailer $mailer
+     * @param string $emailView
+     * @param string $object
      */
-    protected function sendValidationMail(User $user, \Swift_Mailer $mailer) {
+    protected function sendEmail(User $user, \Swift_Mailer $mailer,string $emailView, string $object) {
 
-        $message = (new \Swift_Message('Validez votre inscription'))
-            ->setFrom('test@test.com')
+        $message = (new \Swift_Message($object))
+            ->setFrom($_ENV['EMAIL'])
             ->setTo($user->getEmail())
             ->setContentType("text/html")
             ->setBody(
                 $this->renderView(
-                    'email/register_validation.html.twig',
+                    $emailView,
                     ['user' => $user]
                 )
             );
 
         $mailer->send($message);
     }
-
-    /**
-     * @param User $user
-     * @param \Swift_Mailer $mailer
-     */
-    protected function sendResetPasswordMail(User $user, \Swift_Mailer $mailer) {
-
-        $message = (new \Swift_Message('Reset Password'))
-            ->setFrom('test@test.com')
-            ->setTo($user->getEmail())
-            ->setContentType("text/html")
-            ->setBody(
-                $this->renderView(
-                    'email/reset_password.html.twig',
-                    ['user' => $user]
-                )
-            );
-
-        $mailer->send($message);
-    }
-
 
 }

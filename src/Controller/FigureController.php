@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class FigureController extends AbstractController
 {
@@ -37,10 +38,13 @@ class FigureController extends AbstractController
      * @param Figure|null $figure
      * @param Request $request
      * @param EntityManagerInterface $manager
+     * @param UserInterface $user
      * @return Response
      */
-    public function store(Figure $figure = null,Request $request, EntityManagerInterface $manager): Response
+    public function store(Figure $figure = null,Request $request, EntityManagerInterface $manager, UserInterface $user): Response
     {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if(!$figure){
             $figure = new Figure();
@@ -52,7 +56,8 @@ class FigureController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             !$figure->getId()
-                ? $figure->setCreatedAt(new \DateTime())->setAuthor($manager->getRepository(User::class)->find($user)->id)
+                ? $figure->setCreatedAt(new \DateTime())
+                        ->setAuthor($user)
                 : null;
 
             $images = $form->get('images')->getData();
@@ -79,6 +84,8 @@ class FigureController extends AbstractController
 
             $manager->persist($figure);
             $manager->flush();
+
+            $this->addFlash('success', "C'est validé ! En piste !");
 
             return $this->redirectToRoute('figure_show', [
                 'id' => $figure->getId(),
@@ -125,6 +132,8 @@ class FigureController extends AbstractController
     public function update(Figure $figure, Request $request, EntityManagerInterface $manager): Response
     {
 
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $form = $this->createForm(FigureType::class, $figure)
             ->remove('images')
             ->remove('videos')
@@ -155,6 +164,9 @@ class FigureController extends AbstractController
      */
     public function delete(Figure $figure, EntityManagerInterface $manager): \Symfony\Component\HttpFoundation\RedirectResponse
     {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $medias = $figure->getMedia();
         foreach ($medias as $media){
             if($media->getType() === 'photo' && $media->getLink() !== 'default.jpeg'){

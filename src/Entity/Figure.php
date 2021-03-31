@@ -6,9 +6,15 @@ use App\Repository\FigureRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
+ * @UniqueEntity(
+ *     fields={"name"},
+ *     message="This figure already exists."
+ * )
  */
 class Figure
 {
@@ -21,16 +27,18 @@ class Figure
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min="3", max="255", minMessage="Au moins 3 caractères")
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $type;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min="10", max="255", minMessage="Au moins 10 caractères")
      */
     private $description;
 

@@ -22,6 +22,8 @@ class MediaController extends AbstractController
      */
     public function delete(Media $media, EntityManagerInterface $manager): RedirectResponse
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         if($media->getType() === 'photo' && $media->getLink() !== 'default.jpeg'){
             unlink($this->getParameter('images_directory').'/'. $media->getLink());
         }
@@ -39,6 +41,8 @@ class MediaController extends AbstractController
      */
     public function switchToFavorite(Media $media, EntityManagerInterface $manager): RedirectResponse
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $actualFav =  $manager->getRepository(Media::class)->findOneBy(['figure' => $media->getFigure()->getId(), 'favorite' => true]);
         $actualFav->setFavorite(false);
         $media->setFavorite(true);
@@ -55,6 +59,8 @@ class MediaController extends AbstractController
      */
     public function update(Media $media, EntityManagerInterface $manager, Request $request): RedirectResponse
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $form = $this->createForm(UpdateMediaType::class);
         $form->handleRequest($request);
 

@@ -71,9 +71,9 @@
                                                     {{ form_start(formImage, { "action":path('media_update', {'media' : img.id}) } ) }}
                                                     <div class="row modal-body justify-content-center mt-3">
                                                         <div class="col-10 text-center">
-                                                            {{ form_row(formImage.image,
+                                                            {{ form_widget(formImage.image,
                                                                 {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0"} }) }}
-                                                            {{ form_row(formImage.video,
+                                                            {{ form_widget(formImage.video,
                                                                 {"label":false, "attr":{"class":"d-none"} }) }}
                                                         </div>
                                                     </div>
@@ -132,9 +132,9 @@
                                                     {{ form_start(formVideo, { "action":path('media_update', {'media' : video.id}) } ) }}
                                                     <div class="row modal-body justify-content-center mt-3">
                                                         <div class="col-10 text-center">
-                                                            {{ form_row(formVideo.video,
+                                                            {{ form_widget(formVideo.video,
                                                                 {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0"}, "value":video.link }) }}
-                                                            {{ form_row(formVideo.image,
+                                                            {{ form_widget(formVideo.image,
                                                                 {"label":false, "attr":{"class":"d-none"} }) }}
                                                         </div>
                                                     </div>
@@ -171,7 +171,7 @@
                     {{ form_label(formFigure.description, "Description", {"label_attr":{"class":"mb-0"}}) }}
                 </div>
                 <div class="col-10 text-center">
-                    {{ form_row(formFigure.description,
+                    {{ form_widget(formFigure.description,
                         {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0 registration_input h-10", "rows":"5"}}) }}
                 </div>
             </div>
@@ -181,7 +181,7 @@
                     {{ form_label(formFigure.type, "Type", {"label_attr":{"class":"mb-0"}}) }}
                 </div>
                 <div class="col-12 text-center">
-                    {{ form_row(formFigure.type,
+                    {{ form_widget(formFigure.type,
                         {"label":false, "attr":{"class":"col-6 col-md-6 text-center my-0 registration_input"}}) }}
                 </div>
             </div>

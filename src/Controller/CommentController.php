@@ -24,6 +24,7 @@ class CommentController extends AbstractController
      */
     public function store(Figure $figure, Request $request, EntityManagerInterface $manager): Response
     {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $comment = new Comment();
         $formComment = $this->createForm(CommentType::class, $comment, [
