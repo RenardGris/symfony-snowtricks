@@ -177,7 +177,7 @@ class UserController extends AbstractController
     protected function sendEmail(User $user, \Swift_Mailer $mailer,string $emailView, string $object) {
 
         $message = (new \Swift_Message($object))
-            ->setFrom(getenv('EMAIL'))
+            ->setFrom([$this->getParameter('delivery_email') => $this->getParameter('delivery_email_as')])
             ->setTo($user->getEmail())
             ->setContentType("text/html")
             ->setBody(
