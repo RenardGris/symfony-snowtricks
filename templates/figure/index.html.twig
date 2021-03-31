@@ -1,20 +1,31 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello FigureController!{% endblock %}
+{% block title %}Snowtricks!{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <section class="row justify-content-center">
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        {% for figure in figures %}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/snowtricks/src/Controller/FigureController.php'|file_link(0) }}">src/Controller/FigureController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/snowtricks/templates/figure/index.html.twig'|file_link(0) }}">templates/figure/index.html.twig</a></code></li>
-    </ul>
-</div>
+            <div class="card col-3 m-2">
+                <h3 class="card-header"> {{ figure.name }}</h3>
+                <a class="btn btn-warning" href="{{ path('figure_update', {'id' : figure.id}) }}">Modifier</a>
+                <a class="btn btn-danger" href="{{ path('figure_delete', {'id' : figure.id}) }}">Delete</a>
+                <div class="card-body">
+                    <h6 class="metadata">Crée le : {{ figure.createdAt | date('d-m-Y') }}</h6>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" class="d-block user-select-none" width="100%" height="200" aria-label="Placeholder: Image cap" focusable="false" role="img" preserveAspectRatio="xMidYMid slice" viewBox="0 0 318 180" style="font-size:1.125rem;text-anchor:middle">
+                    <rect width="100%" height="100%" fill="#868e96"></rect>
+                </svg>
+                <div class="card-body">
+                    <p class="card-text"> {{ figure.description }}</p>
+                </div>
+                <div class="card-footer text-muted">
+                    <a href="{{ path('figure_show', {'id' : figure.id}) }}" class="btn btn-primary">Lire la suite</a>
+                </div>
+            </div>
+
+        {% endfor %}
+
+    </section>
 {% endblock %}

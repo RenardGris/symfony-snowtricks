@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Snowtricks!{% endblock %}
+
+{% block body %}
+    <article>
+        <h3>{{ figure.name }}</h3>
+        <div class="metadata">Crée le : {{ figure.createdAt | date('d-m-Y') }}</div>
+        <div class="content">
+            <img src="" alt="">
+            <p>{{ figure.description }}</p>
+        </div>
+        <a href="{{ path('figure_show', {'id' : figure.id}) }}" class="btn btn-primary">Lire la suite</a>
+    </article>
+
+    <hr/>
+    {% embed 'comment/index.html.twig' %}
+    {% endembed %}
+{% endblock %}

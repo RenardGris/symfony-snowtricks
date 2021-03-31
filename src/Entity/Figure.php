@@ -46,7 +46,7 @@ class Figure
     private $author;
 
     /**
-     * @ORM\OneToMany(targetEntity=Media::class, mappedBy="figure", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Media::class, mappedBy="figure", orphanRemoval=true, cascade={"persist"})
      */
     private $media;
 

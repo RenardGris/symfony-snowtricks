@@ -2,70 +2,167 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
+use App\Entity\Figure;
+use App\Entity\Media;
+use App\Entity\User;
+use App\Form\CommentType;
+use App\Form\FigureType;
+use App\Repository\FigureRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class FigureController extends AbstractController
 {
     /**
-     * @Route("/figure", name="figure_index", methods={"GET"})
+     * @Route("/", name="figure_index", methods={"GET"})
+     * @param FigureRepository $repository
      * @return Response
      */
-    public function index(): Response
+    public function index(FigureRepository $repository): Response
     {
         return $this->render('figure/index.html.twig', [
-            'controller_name' => 'FigureController',
+            'figures' => $repository->findAll()
         ]);
     }
 
     /**
-     * @Route("/figure/{id}", name="figure_index", methods={"GET"})
+     * @Route("/figure/new", name="figure_store")
+     * @param Figure|null $figure
+     * @param Request $request
+     * @param EntityManagerInterface $manager
      * @return Response
-     *
      */
-    public function show(): Response
+    public function store(Figure $figure = null,Request $request, EntityManagerInterface $manager): Response
     {
-        return $this->render('figure/show.html.twig', [
-            'controller_name' => 'FigureController',
-        ]);
-    }
 
-    /**
-     * @Route("/figure/{id}", name="figure_index", methods={"POST"})
-     * @return Response
-     *
-     */
-    public function update(): Response
-    {
-        return $this->render('figure/index.html.twig', [
-            'controller_name' => 'FigureController',
-        ]);
-    }
+        if(!$figure){
+            $figure = new Figure();
+        }
 
-    /**
-     * @Route("/figure/new", name="figure_index", methods={"POST"})
-     * @return Response
-     *
-     */
-    public function store(): Response
-    {
+        $form = $this->createForm(FigureType::class, $figure);
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            !$figure->getId()
+                ? $figure->setCreatedAt(new \DateTime())->setAuthor($manager->getRepository(User::class)->find(60))
+                : null;
+
+            $images = $form->get('images')->getData();
+            $videos =  $form->get('videos')->getData();
+
+            // On boucle sur les images
+            foreach($images as $image){
+                $this->storeMediaToFigure($figure,$image, 'photo');
+            }
+            foreach($videos as $video){
+                $this->storeMediaToFigure($figure,$video, 'video');
+            }
+
+            $manager->persist($figure);
+            $manager->flush();
+
+            return $this->redirectToRoute('figure_show', [
+                'id' => $figure->getId(),
+            ]);
+
+        }
+
         return $this->render('figure/store.html.twig', [
-            'controller_name' => 'FigureController',
+            'formFigure' => $form->createView(),
+            'editMode' => $figure->getId() !== null,
+        ]);
+
+    }
+
+    /**
+     * @Route("/figure/{id}", name="figure_show", methods={"GET"})
+     * @param Figure $figure
+     * @return Response
+     */
+    public function show(Figure $figure): Response
+    {
+
+        $comment = new Comment();
+        $formComment = $this->createForm(CommentType::class, $comment, [
+            'action' => $this->generateUrl('comment_post', ['id' => $figure->getId()]),
+            'method' => 'POST',
+        ]);
+
+        return $this->render('figure/show.html.twig', [
+            'figure' => $figure,
+            'formComment' => $formComment->createView(),
         ]);
     }
 
     /**
-     * @Route("/figure/{id}", name="figure_index", methods={"DELETE"})
+     * @Route("/figure/{id}/edit", name="figure_update")
+     * @param Figure $figure
+     * @param Request $request
+     * @param EntityManagerInterface $manager
      * @return Response
-     *
      */
-    public function delete(): Response
+    public function update(Figure $figure, Request $request, EntityManagerInterface $manager): Response
     {
-        return $this->render('figure/index.html.twig', [
-            'controller_name' => 'FigureController',
+
+        $form = $this->createForm(FigureType::class, $figure)
+            ->remove('images')
+            ->remove('videos');
+
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+
+            $figure->setUpdatedAt(new  \DateTime());
+            $manager->persist($figure);
+            $manager->flush();
+
+        }
+
+        return $this->render('figure/update.html.twig', [
+            'formFigure' => $form->createView(),
         ]);
     }
 
+    /**
+     * @Route("/figure/{id}/delete", name="figure_delete")
+     * @param Figure $figure
+     * @param EntityManagerInterface $manager
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function delete(Figure $figure, EntityManagerInterface $manager): \Symfony\Component\HttpFoundation\RedirectResponse
+    {
+        $medias = $figure->getMedia();
+        foreach ($medias as $media){
+            unlink($this->getParameter('images_directory').'/'. $media->getLink());
+        }
+
+        $manager->remove($figure);
+        $manager->flush();
+        return $this->redirectToRoute('figure_index',  ['figure' => $manager->getRepository(Figure::class)]);
+    }
+
+    protected function storeMediaToFigure($figure, $image, $type){
+        // On génère un nouveau nom de fichier
+        $fichier = md5(uniqid()).'.'.$image->guessExtension();
+
+        // On copie le fichier dans le dossier uploads
+        $image->move(
+            $this->getParameter('images_directory'),
+            $fichier
+        );
+
+        // On crée l'image dans la base de données
+        $media = new Media();
+        $media->setLink($fichier);
+        $media->setType($type);
+        $media->setAddedAt(new \DateTime());
+        $media->setFavorite(false);
+        $figure->addMedium($media);
+    }
 
 }

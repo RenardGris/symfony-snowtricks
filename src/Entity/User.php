@@ -6,11 +6,16 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity(
+ *     fields={"email"}, message="Email déjà utilisé"
+ * )
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id
@@ -26,11 +31,14 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email()
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min="8", minMessage="8 caractères minimum")
+     * @Assert\EqualTo(propertyPath="confirm_password", message="le mot de passe doit être identique")
      */
     private $password;
 
@@ -58,6 +66,12 @@ class User
      * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="author")
      */
     private $figures;
+
+    /**
+     * @Assert\EqualTo(propertyPath="password", message="le mot de passe doit être identique")
+     *
+     */
+    private $confirm_password;
 
     public function __construct()
     {
@@ -104,6 +118,16 @@ class User
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getConfirmPassword()
+    {
+        return $this->confirm_password;
+    }
+
+    public function setConfirmPassword($confirm_password): void
+    {
+        $this->confirm_password = $confirm_password;
     }
 
     public function getAvatar(): ?string
@@ -200,5 +224,20 @@ class User
         }
 
         return $this;
+    }
+
+    public function getRoles()
+    {
+        return['ROLE_USER'];
+    }
+
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
     }
 }
