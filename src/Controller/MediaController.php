@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Figure;
 use App\Entity\Media;
+use App\Form\StoreMediaType;
 use App\Form\UpdateMediaType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,7 +20,7 @@ class MediaController extends AbstractController
      * @Route("/media/{media}/delete", name="media_delete")
      * @param Media $media
      * @param EntityManagerInterface $manager
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function delete(Media $media, EntityManagerInterface $manager): RedirectResponse
     {
@@ -27,6 +29,12 @@ class MediaController extends AbstractController
         if($media->getType() === 'photo' && $media->getLink() !== 'default.jpeg'){
             unlink($this->getParameter('images_directory').'/'. $media->getLink());
         }
+
+        $figure = $media->getFigure();
+        if(count($figure->getMedia()) === 0){
+            $this->storeDefaultImg($figure);
+        }
+
         $manager->remove($media);
         $manager->flush();
         return $this->redirectToRoute('figure_update',  ['id' => $media->getFigure()->getId()]);
@@ -37,7 +45,7 @@ class MediaController extends AbstractController
      * @Route("/media/{media}/favorite", name="media_switch_favorite")
      * @param Media $media
      * @param EntityManagerInterface $manager
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function switchToFavorite(Media $media, EntityManagerInterface $manager): RedirectResponse
     {
@@ -55,7 +63,7 @@ class MediaController extends AbstractController
      * @param Media $media
      * @param EntityManagerInterface $manager
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function update(Media $media, EntityManagerInterface $manager, Request $request): RedirectResponse
     {
@@ -87,23 +95,109 @@ class MediaController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/media/{media}/remove-favorite", name="media_remove_favorite")
+     * @param Media $media
+     * @param EntityManagerInterface $manager
+     * @return RedirectResponse
+     */
+    public function removeFavorite(Media $media, EntityManagerInterface $manager): RedirectResponse
+    {
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
-    public function storeMediaToFigure($figure, $image, $type){
-        // On génère un nouveau nom de fichier
-        $fichier = md5(uniqid()).'.'.$image->guessExtension();
+        $newFav =  $manager->getRepository(Media::class)->findOneBy([
+            'figure' => $media->getFigure()->getId(),
+            'favorite' => false,
+            'type' => 'photo'
+        ]);
+        if($newFav){
+            $media->setFavorite(false);
+            $newFav->setFavorite(true);
+            $manager->persist($media);
+            $manager->flush();
+        }
 
-        // On copie le fichier dans le dossier uploads
-        $image->move(
-            $this->getParameter('images_directory'),
-            $fichier
-        );
+        return $this->redirectToRoute('figure_update',  ['id' => $media->getFigure()->getId()]);
+    }
+
+
+    /**
+     * @param $figure
+     * @param $image
+     * @param $type
+     * @param $directory
+     * @param bool $favorite
+     */
+    public function storeMediaToFigure($figure, $image, $type, $directory, $favorite = false){
+
+        $fichier = $image;
+        if($type === 'photo') {
+            // On génère un nouveau nom de fichier
+            $fichier = md5(uniqid()).'.'.$image->guessExtension();
+            // On copie le fichier dans le dossier uploads
+            $image->move(
+                $directory,
+                $fichier
+            );
+        }
 
         // On crée l'image dans la base de données
         $media = new Media();
         $media->setLink($fichier);
         $media->setType($type);
         $media->setAddedAt(new \DateTime());
-        $media->setFavorite(false);
+        $media->setFavorite($favorite);
+        $figure->addMedium($media);
+    }
+
+    /**
+     * @Route("figure/{figure}/media/store", name="media_store")
+     * @param Figure $figure
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return RedirectResponse
+     */
+    public function store(Figure $figure,Request $request, EntityManagerInterface $manager): RedirectResponse
+    {
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
+        $form = $this->createForm(StoreMediaType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $types = [
+                'photo' => $form->get('images')->getData(),
+                'video' => $form->get('video')->getData()
+            ];
+
+            foreach ($types as $k => $medias){
+                if(isset($medias)){
+                    foreach ($medias as $media){
+                        if(isset($media)){
+                            $this->storeMediaToFigure($figure, $media, $k, $this->getParameter('images_directory'));
+                        }
+                    }
+                }
+            }
+
+            $manager->persist($figure);
+            $manager->flush();
+        }
+
+        return $this->redirectToRoute('figure_update',  ['id' => $figure->getId()]);
+    }
+
+    /**
+     * @param $figure
+     */
+    public function storeDefaultImg($figure){
+        $media = new Media();
+        $media->setLink('default.jpeg');
+        $media->setType('photo');
+        $media->setAddedAt(new \DateTime());
+        $media->setFavorite(true);
         $figure->addMedium($media);
     }
 

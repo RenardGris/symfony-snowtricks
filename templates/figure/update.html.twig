@@ -17,10 +17,7 @@
                     <img src="/uploads/{{ img.link }}" alt="favorite_img" class="img-fluid">
                     {% if app.user %}
                         <div class="position-absolute" id="figure_btn">
-                            <a class="btn btn-white py-0 px-1" href='{{ path('figure_update', {'id' : figure.id}) }}'>
-                                <i class='bi bi-pencil'></i>
-                            </a>
-                            <a class="btn btn-white py-0 px-1" href='{{ path('figure_delete', {'id' : figure.id}) }}'>
+                            <a class="btn btn-white py-0 px-1" href='{{ path('media_remove_favorite', {'media' : img.id}) }}'>
                                 <i class='bi bi-trash'></i>
                             </a>
                         </div>
@@ -40,11 +37,7 @@
                     <div id="carouselImgFigure" class="carousel slide" data-interval="false">
                         <div class="carousel-inner">
                             {% for img in medias_img %}
-                                {% if loop.first %}
-                                    <div class="carousel-item active">
-                                {% else %}
-                                    <div class="carousel-item">
-                                {% endif %}
+                                    <div class="carousel-item {% if loop.first  %}active{% endif %}">
                                         <img src="/uploads/{{ img.link }}" alt="figure_img" class="d-block w-100">
                                         <div class="text-center">
                                             <a class="btn btn-white py-0 px-1" href='{{ path('media_switch_favorite', {'media' : img.id}) }}'>
@@ -57,8 +50,7 @@
                                                 <i class='bi bi-trash'></i>
                                             </a>
                                         </div>
-
-                                        {% set formImage = formUpdateMedia.createView %}
+                                        {% set form_image = formUpdateMedia.createView %}
                                         <div class="modal fade" id="modalEditMedia" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
@@ -68,12 +60,12 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    {{ form_start(formImage, { "action":path('media_update', {'media' : img.id}) } ) }}
+                                                    {{ form_start(form_image, { "action":path('media_update', {'media' : img.id}) } ) }}
                                                     <div class="row modal-body justify-content-center mt-3">
                                                         <div class="col-10 text-center">
-                                                            {{ form_widget(formImage.image,
+                                                            {{ form_widget(form_image.image,
                                                                 {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0"} }) }}
-                                                            {{ form_widget(formImage.video,
+                                                            {{ form_widget(form_image.video,
                                                                 {"label":false, "attr":{"class":"d-none"} }) }}
                                                         </div>
                                                     </div>
@@ -81,14 +73,14 @@
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                                                         <button type="submit" class="btn btn-primary">Modifier</button>
                                                     </div>
-                                                    {{ form_end(formImage) }}
+                                                    {{ form_end(form_image) }}
                                                 </div>
                                             </div>
                                         </div>
 
                                     </div>
                             {% endfor %}
-                                    </div>
+                        </div>
                         <a class="carousel-control-prev" href="#carouselImgFigure" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="sr-only">Previous</span>
@@ -104,23 +96,19 @@
                     <div id="carouselExampleControls" class="carousel slide" data-interval="false">
                         <div class="carousel-inner">
                             {% for video in medias_vid %}
-                                {% if loop.first %}
-                                    <div class="carousel-item active embed-responsive embed-responsive-16by9">
-                                {% else %}
-                                    <div class="carousel-item embed-responsive embed-responsive-16by9">
-                                {% endif %}
+                                <div class="carousel-item embed-responsive embed-responsive-16by9 {% if loop.first  %}active{% endif %}">
                                     <iframe class="embed-responsive-item" src="{{ video.link }}" id="video"></iframe>
-                                        <div class="text-center">
-                                            <a class="btn btn-white py-0 px-1" data-toggle="modal" data-target="#modalEditMediaVideo">
-                                                <i class='bi bi-pencil'></i>
-                                            </a>
-                                            <a class="btn btn-white py-0 px-1" href='{{ path('media_delete', {'media' : video.id}) }}'>
-                                                <i class='bi bi-trash'></i>
-                                            </a>
-                                        </div>
+                                    <div class="text-center">
+                                        <a class="btn btn-white py-0 px-1" data-toggle="modal" data-target="#modalEditMediaVideo">
+                                            <i class='bi bi-pencil'></i>
+                                        </a>
+                                        <a class="btn btn-white py-0 px-1" href='{{ path('media_delete', {'media' : video.id}) }}'>
+                                            <i class='bi bi-trash'></i>
+                                        </a>
+                                    </div>
 
-                                        {% set formVideo = formUpdateMedia.createView %}
-                                        <div class="modal fade" id="modalEditMediaVideo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                    {% set form_video = formUpdateMedia.createView %}
+                                    <div class="modal fade" id="modalEditMediaVideo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -129,12 +117,12 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    {{ form_start(formVideo, { "action":path('media_update', {'media' : video.id}) } ) }}
+                                                    {{ form_start(form_video, { "action":path('media_update', {'media' : video.id}) } ) }}
                                                     <div class="row modal-body justify-content-center mt-3">
                                                         <div class="col-10 text-center">
-                                                            {{ form_widget(formVideo.video,
+                                                            {{ form_widget(form_video.video,
                                                                 {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0"}, "value":video.link }) }}
-                                                            {{ form_widget(formVideo.image,
+                                                            {{ form_widget(form_video.image,
                                                                 {"label":false, "attr":{"class":"d-none"} }) }}
                                                         </div>
                                                     </div>
@@ -142,13 +130,12 @@
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                                                         <button type="submit" class="btn btn-primary">Modifier</button>
                                                     </div>
-                                                    {{ form_end(formVideo) }}
+                                                    {{ form_end(form_video) }}
                                                 </div>
                                             </div>
                                         </div>
-
-                                    </div>
-                            {% endfor %}
+                                </div>
+                          {% endfor %}
                         </div>
                         <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -160,9 +147,14 @@
                         </a>
                     </div>
                 </div>
-
             </div>
-
+            <div class="row justify-content-center px-0 py-2 m-0" id="add_media">
+                <div class="col-12 col-md-6 py-2 text-center">
+                    <a class="btn border border-info py-2 px-2" data-toggle="modal" data-target="#modalAddMedia">
+                        <i class='bi bi-plus-square'> Ajouter des photos/videos</i>
+                    </a>
+                </div>
+            </div>
 
             {{ form_start(formFigure) }}
 
@@ -176,13 +168,13 @@
                 </div>
             </div>
 
-            <div class="row justify-content-start mt-3">
+            <div class="row justify-content-center mt-3">
                 <div class="col-12 text-center">
                     {{ form_label(formFigure.type, "Type", {"label_attr":{"class":"mb-0"}}) }}
                 </div>
-                <div class="col-12 text-center">
+                <div class="col-10 text-center">
                     {{ form_widget(formFigure.type,
-                        {"label":false, "attr":{"class":"col-6 col-md-6 text-center my-0 registration_input"}}) }}
+                        {"label":false, "attr":{"class":"col-12 text-center my-0 registration_input"}}) }}
                 </div>
             </div>
 
@@ -195,4 +187,5 @@
 
         </article>
     </div>
+    {% include 'modal/add_media.html.twig' %}
 {% endblock %}

@@ -8,6 +8,7 @@ use App\Entity\Media;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\FigureType;
+use App\Form\StoreMediaType;
 use App\Form\UpdateMediaType;
 use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
@@ -62,33 +63,33 @@ class FigureController extends AbstractController
 
             $images = $form->get('images')->getData();
             $videos =  $form->get('videos')->getData();
+            $favoriteChoice = $request->request->get('figure_favorite');
 
             // On boucle sur les images
-            if(sizeof($images) > 0) {
-                $mc = new  MediaController();
+            $mc = new  MediaController();
+            if(count($images) > 0) {
                 foreach($images as $image) {
-                    $mc->storeMediaToFigure($figure, $image, 'photo');
+                    $favoriteChoice === $image->getClientOriginalName() ? $favorite = true : $favorite = false;
+                    $mc->storeMediaToFigure($figure, $image, 'photo', $this->getParameter('images_directory'), $favorite);
                 }
             } else {
-                $media = new Media();
-                $media->setLink('default.jpeg');
-                $media->setType('photo');
-                $media->setAddedAt(new \DateTime());
-                $media->setFavorite(true);
-                $figure->addMedium($media);
-            }
-            $mc = new  MediaController();
-            foreach($videos as $video){
-                $mc->storeMediaToFigure($figure,$video, 'video');
+                $mc->storeDefaultImg($figure);
             }
 
+            if(count($videos) > 0){
+                foreach($videos as $video){
+                    $mc->storeMediaToFigure($figure,$video, 'video', $this->getParameter('images_directory'));
+                }
+            }
+
+            $figure->setSlug($figure->getName());
             $manager->persist($figure);
             $manager->flush();
 
             $this->addFlash('success', "C'est validé ! En piste !");
 
             return $this->redirectToRoute('figure_show', [
-                'id' => $figure->getId(),
+                'slug' => $figure->getSlug(),
             ]);
 
         }
@@ -101,7 +102,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/{id}", name="figure_show", methods={"GET"})
+     * @Route("/figure/{slug}", name="figure_show", methods={"GET"})
      * @param Figure $figure
      * @param CommentRepository $commentRepository
      * @return Response
@@ -153,6 +154,7 @@ class FigureController extends AbstractController
             'figure' => $figure,
             'formFigure' => $form->createView(),
             'formUpdateMedia' => $this->createForm(UpdateMediaType::class),
+            'formAddImage' => $this->createForm(StoreMediaType::class)->createView(),
         ]);
     }
 

@@ -30,14 +30,19 @@
             <li class="nav-item">
                 <a class="nav-link border-light border-right" href="{{ path("figure_index") }}">Figures</a>
             </li>
+            {% if app.user %}
+                <li class="nav-item border-light border-right">
+                    <a class="nav-link" href="{{ path("figure_store") }}">Ajouter une figure</a>
+                </li>
+            {% endif %}
             <li class="nav-item">
                 <a class="nav-link border-light border-right" href="{{ path("login") }}">Sign in</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item border-light border-right">
                 <a class="nav-link" href="{{ path("register") }}">Sign up</a>
             </li>
             {% if app.user %}
-            <li class="nav-item border-light border-left">
+            <li class="nav-item border-light border-right">
                 <a class="nav-link" href="{{ path("logout") }}">Logout</a>
             </li>
             {% endif %}
@@ -45,7 +50,7 @@
     </div>
 </nav>
 {% block before_body %}{% endblock %}
-<div class="px-4 p-t-10 p-b-5" id="contain">
+<div class="px-4 p-t-10 p-b-5 v-100" id="contain">
     {% include 'alert/show.html.twig' %}
     {% block body %}{% endblock %}
 </div>
@@ -63,12 +68,11 @@
 {% endblock %}
 </html>
 {% block javascripts %}
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             bsCustomFileInput.init()
@@ -131,6 +135,39 @@
             $("#success-alert").fadeTo(2000, 500).slideUp(500, function(){
                 $("#success-alert").slideUp(500);
             });
+        });
+        $(document).ready(function () {
+            jQuery('.add-video').click(function (e) {
+                var list = jQuery(jQuery(this).attr('data-list-selector'));
+                // Try to find the counter of the list or use the length of the list
+                var counter = list.data('widget-counter') || list.children().length;
+
+                // grab the prototype template
+                var newWidget = list.attr('data-prototype');
+                // replace the "__name__" used in the id and name of the prototype
+                // with a number that's unique to your emails
+                // end name attribute looks like name="contact[emails][2]"
+                newWidget = newWidget.replace(/__name__/g, counter);
+                // Increase the counter
+                counter++;
+                // And store it, the length cannot be used if deleting widgets is allowed
+                list.data('widget-counter', counter);
+
+                // create a new list element and add it to the list
+                var newElem = jQuery(list.attr('data-widget-tags')).html(newWidget);
+                newElem.appendTo(list);
+            });
+        });
+        $("#figure_images").change(function() {
+
+            let files = $('#figure_images').prop("files")
+            let images = $.map(files, function(val) { return val.name; });
+            console.log(files)
+            images.forEach(img => {
+                let choice = new Option(img, img);
+                console.log(img);
+                $("#figure_favorite").append(choice);
+            })
         });
     </script>
 {% endblock %}

@@ -241,7 +241,13 @@ class User implements UserInterface
         // TODO: Implement eraseCredentials() method.
     }
 
-    public function setNewToken(){
+    public function setNewToken()
+    {
         $this->setToken(md5(uniqid(). $this->getSalt()));
+    }
+
+    public function isValid(): ?bool
+    {
+        return $this->getValidate();
     }
 }

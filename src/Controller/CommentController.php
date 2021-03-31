@@ -41,7 +41,7 @@ class CommentController extends AbstractController
             $manager->persist($comment);
             $manager->flush($comment);
 
-            return $this->redirectToRoute('figure_show', ['id' => $figure->getId()]);
+            return $this->redirectToRoute('figure_show', ['slug' => $figure->getSlug()]);
         }
 
         return $this->render('comment/index.html.twig', [
@@ -57,8 +57,8 @@ class CommentController extends AbstractController
      */
     public function loadMore(Request $request, EntityManagerInterface $manager): JsonResponse
     {
-        $page = intval($request->request->get('page'));
-        $figureId = intval($request->request->get('figure_id'));
+        $page = (int)$request->request->get('page');
+        $figureId = (int)$request->request->get('figure_id');
 
         $repo = $manager->getRepository(Comment::class);
         $comments = $repo->paginateComments($page, $figureId);

@@ -1,0 +1,9 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block before_body %}
+    <div id="landing_error_403" class="view d-flex align-items-center justify-content-center">
+        {% set error_message = "Oh non ! Il semblerait que tu ne puisses pas faire ça  !" %}
+        {% include 'bundles/TwigBundle/Exception/landing_error.html.twig' %}
+    </div>
+{% endblock %}

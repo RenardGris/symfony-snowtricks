@@ -25,6 +25,11 @@ class UserController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        $error = $authenticationUtils->getLastAuthenticationError();
+        if($error){
+            $this->addFlash('error_login', $error);
+        }
+
         return $this->render('user/login.html.twig');
     }
 
@@ -56,8 +61,9 @@ class UserController extends AbstractController
         if($form->isSubmitted() && $form->isValid()){
             $hash = $encoder->encodePassword($user, $user->getPassword());
 
+            $avatars = ['avatar-1.jpg','avatar-2.jpg','avatar-3.jpg','avatar-4.jpg'];
             $user->setPassword($hash);
-            $user->setAvatar('http://placeimg.com/120/120/any')
+            $user->setAvatar($avatars[array_rand($avatars, 1)])
                 ->setValidate(false)
                 ->setNewToken();
 
@@ -171,7 +177,7 @@ class UserController extends AbstractController
     protected function sendEmail(User $user, \Swift_Mailer $mailer,string $emailView, string $object) {
 
         $message = (new \Swift_Message($object))
-            ->setFrom($_ENV['EMAIL'])
+            ->setFrom([$this->getParameter('delivery_email') => $this->getParameter('delivery_email_as')])
             ->setTo($user->getEmail())
             ->setContentType("text/html")
             ->setBody(

@@ -1,0 +1,9 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block before_body %}
+    <div id="landing_error_other" class="view d-flex align-items-center justify-content-center">
+        {% set error_message = "Et c'est la chute... les erreurs ça arrive à tout le monde" %}
+        {% include 'bundles/TwigBundle/Exception/landing_error.html.twig' %}
+    </div>
+{% endblock %}
