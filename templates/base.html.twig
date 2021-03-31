@@ -2,44 +2,64 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Welcome!{% endblock %}</title>
     {# Run `composer require symfony/webpack-encore-bundle`
            and uncomment the following Encore helpers to start using Symfony UX #}
     {% block stylesheets %}
         {# {{ encore_entry_link_tags('app') }} #}
         <link rel="stylesheet" href="https://bootswatch.com/4/sandstone/bootstrap.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+        <link href="{{ asset('css/style.css') }}" rel="stylesheet"/>
     {% endblock %}
 
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">Navbar</a>
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark scrolling-navbar">
+    <img class="navbar-brand" src="{{ asset('css/logo_snowtricks_1.png') }}" alt="logo_snowtricks" />
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
             aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarColor01">
-        <ul class="navbar-nav mr-auto">
+    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2" id="navbarColor01">
+        <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home
-                    <span class="sr-only">(current)</span>
-                </a>
+                <a class="nav-link border-light border-right" href="{{ path("figure_index") }}">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ path("figure_index") }}">Figures</a>
+                <a class="nav-link border-light border-right" href="{{ path("figure_index") }}">Figures</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ path("login") }}">Login</a>
+                <a class="nav-link border-light border-right" href="{{ path("login") }}">Sign in</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path("register") }}">Sign up</a>
+            </li>
+            {% if app.user %}
+            <li class="nav-item border-light border-left">
+                <a class="nav-link" href="{{ path("logout") }}">Logout</a>
+            </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
-
-<div class="container">
+{% block before_body %}{% endblock %}
+<div class="px-4 p-t-10 p-b-5" id="contain">
     {% block body %}{% endblock %}
 </div>
 </body>
+{% block footer %}
+    <footer class="page-footer footer bg-dark mx-O py-2">
+        <div class="container">
+            <div class="row p-0 m-0">
+                <div class="col-md-6">
+                    <span>Copyright © 2021</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
 </html>
 {% block javascripts %}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -47,9 +67,64 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             bsCustomFileInput.init()
         })
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+        $(document).on("click", ".popover .close" , function(){
+            $(this).parents(".popover").popover('hide');
+        });
+        function showMedias() {
+            document.getElementById("medias").style.display = "flex";
+        }
+        $(document).ready(function () {
+            const loadBtn = document.getElementById("btn_load_more");
+            let nextPage = $(loadBtn).data("next");
+
+            loadBtn.addEventListener("click", function (e) {
+                const container = $("#figure_list");
+                let requestedPage = nextPage + 1
+                $.ajax({
+                    method: "POST",
+                    url: "/figure/load_more",
+                    data : 'page=' + requestedPage,
+                    success(response) {
+                        container.append(response.nextFigure);
+
+                        if (response.pages === false) {
+                            loadBtn.style.display = "none";
+                        }
+                    }
+                });
+            });
+        });
+        $(document).ready(function () {
+            const loadBtn = document.getElementById("load_more_comments");
+            let nextPage = $(loadBtn).data("next");
+            let figureId = $(loadBtn).data("figure");
+
+
+            loadBtn.addEventListener("click", function (e) {
+                const container = $("#comments");
+                let requestedPage = nextPage + 1
+                $.ajax({
+                    method: "POST",
+                    url: "/comment/load_more",
+                    data : 'page=' + requestedPage + '&figure_id=' + figureId,
+                    success(response) {
+                        container.append(response.nextComments);
+
+                        if (response.page === false) {
+                            loadBtn.style.display = "none";
+                        }
+                    }
+                });
+            });
+        });
+
     </script>
 {% endblock %}

@@ -5,24 +5,79 @@
 {%  form_theme formFigure 'bootstrap_4_layout.html.twig' %}
 
 {% block body %}
-    <h1>Ajouter une figure</h1>
+    <div class="figure_landing">
+        <div class="row justify-content-center p-t-10 m-0">
+            {{ form_start(formFigure, {"attr":{"class":"col-12 col-md-10 col-lg-4 col-xl-3 text-center border border-dark bg-white","id":"add_figue_form"}} )  }}
 
-    {{ form_start(formFigure) }}
+            <div class="row justify-content-center mt-3">
+                <h2 class="col-12 col-md-10 text-center my-4">Ajouter une figure</h2>
+            </div>
 
-    {{ form_row(formFigure.name, { 'attr' : {'placeholder' : 'Nom'}}) }}
-    {{ form_row(formFigure.type, { 'attr' : {'placeholder' : 'Type'}}) }}
-    {{ form_row(formFigure.images, { 'attr' : {'placeholder' : 'Images'}}) }}
-    {{ form_row(formFigure.videos, { 'attr' : {'placeholder' : 'Images'}}) }}
-    {{ form_row(formFigure.description, { 'attr' : {'placeholder' : 'Contenu'}}) }}
 
-    <button type="submit" class="btn btn-primary">
-        {% if editMode %}
-            Modifier
-        {% else %}
-            Ajouter
-        {% endif %}
-    </button>
+            <div class="row justify-content-center mt-3">
+                <div class="col-12 text-center">
+                    {{ form_label(formFigure.name, "Nom", {"label_attr":{"class":"mb-0"}}) }}
+                </div>
+                <div class="col-12 text-center">
+                    {{ form_row(formFigure.name,
+                        {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0 registration_input"}}) }}
+                </div>
+            </div>
 
-    {{ form_end(formFigure) }}
+            <div class="row justify-content-center mt-3">
+                <div class="col-12 text-center">
+                    {{ form_label(formFigure.type, "Type", {"label_attr":{"class":"mb-0"}}) }}
+                </div>
+                <div class="col-12 text-center">
+                    {{ form_row(formFigure.type,
+                        {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0 registration_input"}}) }}
+                </div>
+            </div>
+
+            <div class="row justify-content-center mt-3">
+                <div class="col-12 text-center">
+                    {{ form_label(formFigure.images, "Images", {"label_attr":{"class":"mb-0"}}) }}
+                </div>
+                <div class="col-12 text-center">
+                    {{ form_row(formFigure.images,
+                        {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0 registration_input"}}) }}
+                </div>
+            </div>
+
+            <div class="row justify-content-center mt-3">
+                <div class="col-12 text-center">
+                    {{ form_label(formFigure.videos, "Videos", {"label_attr":{"class":"mb-0"}}) }}
+                </div>
+                <div class="col-12 text-center">
+                    {{ form_row(formFigure.videos,
+                        {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0 registration_input"}}) }}
+                </div>
+            </div>
+
+            <div class="row justify-content-center mt-3">
+                <div class="col-12 text-center">
+                    {{ form_label(formFigure.description, "Description", {"label_attr":{"class":"mb-0"}}) }}
+                </div>
+                <div class="col-12 text-center">
+                    {{ form_row(formFigure.description,
+                        {"label":false, "attr":{"class":"col-12 col-md-12 text-center my-0 registration_input"}}) }}
+                </div>
+            </div>
+
+
+            <div class="row justify-content-center my-4">
+                <button type="submit" class="btn btn-info col-10 col-sm-6 col-md-3 col-lg-5">
+                    {% if editMode %}
+                        Modifier
+                    {% else %}
+                        Ajouter
+                    {% endif %}
+                </button>
+            </div>
+
+            {{ form_end(formFigure) }}
+        </div>
+    </div>
 
 {% endblock %}
+{% block footer %}{%  endblock %}

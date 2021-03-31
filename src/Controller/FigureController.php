@@ -8,9 +8,12 @@ use App\Entity\Media;
 use App\Entity\User;
 use App\Form\CommentType;
 use App\Form\FigureType;
+use App\Form\UpdateMediaType;
+use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -25,7 +28,7 @@ class FigureController extends AbstractController
     public function index(FigureRepository $repository): Response
     {
         return $this->render('figure/index.html.twig', [
-            'figures' => $repository->findAll()
+            'figures' => $repository->paginateFigure(1)
         ]);
     }
 
@@ -49,18 +52,29 @@ class FigureController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             !$figure->getId()
-                ? $figure->setCreatedAt(new \DateTime())->setAuthor($manager->getRepository(User::class)->find(60))
+                ? $figure->setCreatedAt(new \DateTime())->setAuthor($manager->getRepository(User::class)->find($user)->id)
                 : null;
 
             $images = $form->get('images')->getData();
             $videos =  $form->get('videos')->getData();
 
             // On boucle sur les images
-            foreach($images as $image){
-                $this->storeMediaToFigure($figure,$image, 'photo');
+            if(sizeof($images) > 0) {
+                $mc = new  MediaController();
+                foreach($images as $image) {
+                    $mc->storeMediaToFigure($figure, $image, 'photo');
+                }
+            } else {
+                $media = new Media();
+                $media->setLink('default.jpeg');
+                $media->setType('photo');
+                $media->setAddedAt(new \DateTime());
+                $media->setFavorite(true);
+                $figure->addMedium($media);
             }
+            $mc = new  MediaController();
             foreach($videos as $video){
-                $this->storeMediaToFigure($figure,$video, 'video');
+                $mc->storeMediaToFigure($figure,$video, 'video');
             }
 
             $manager->persist($figure);
@@ -82,9 +96,10 @@ class FigureController extends AbstractController
     /**
      * @Route("/figure/{id}", name="figure_show", methods={"GET"})
      * @param Figure $figure
+     * @param CommentRepository $commentRepository
      * @return Response
      */
-    public function show(Figure $figure): Response
+    public function show(Figure $figure, CommentRepository $commentRepository): Response
     {
 
         $comment = new Comment();
@@ -95,6 +110,7 @@ class FigureController extends AbstractController
 
         return $this->render('figure/show.html.twig', [
             'figure' => $figure,
+            'comments' => $commentRepository->paginateComments(1, $figure->getId()),
             'formComment' => $formComment->createView(),
         ]);
     }
@@ -111,7 +127,8 @@ class FigureController extends AbstractController
 
         $form = $this->createForm(FigureType::class, $figure)
             ->remove('images')
-            ->remove('videos');
+            ->remove('videos')
+            ->remove('name');
 
         $form->handleRequest($request);
 
@@ -124,7 +141,9 @@ class FigureController extends AbstractController
         }
 
         return $this->render('figure/update.html.twig', [
+            'figure' => $figure,
             'formFigure' => $form->createView(),
+            'formUpdateMedia' => $this->createForm(UpdateMediaType::class),
         ]);
     }
 
@@ -138,7 +157,9 @@ class FigureController extends AbstractController
     {
         $medias = $figure->getMedia();
         foreach ($medias as $media){
-            unlink($this->getParameter('images_directory').'/'. $media->getLink());
+            if($media->getType() === 'photo' && $media->getLink() !== 'default.jpeg'){
+                unlink($this->getParameter('images_directory').'/'. $media->getLink());
+            }
         }
 
         $manager->remove($figure);
@@ -146,23 +167,25 @@ class FigureController extends AbstractController
         return $this->redirectToRoute('figure_index',  ['figure' => $manager->getRepository(Figure::class)]);
     }
 
-    protected function storeMediaToFigure($figure, $image, $type){
-        // On génère un nouveau nom de fichier
-        $fichier = md5(uniqid()).'.'.$image->guessExtension();
+    /**
+     * @Route("/figure/load_more", name="figure_load_more")
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
+    public function loadMore(Request $request, EntityManagerInterface $manager): Response
+    {
+        $page = $request->request->get('page');
 
-        // On copie le fichier dans le dossier uploads
-        $image->move(
-            $this->getParameter('images_directory'),
-            $fichier
-        );
+        $repo = $manager->getRepository(Figure::class);
+        $figures = $repo->paginateFigure($page);
+        $lastPage = $repo->lastPage();
 
-        // On crée l'image dans la base de données
-        $media = new Media();
-        $media->setLink($fichier);
-        $media->setType($type);
-        $media->setAddedAt(new \DateTime());
-        $media->setFavorite(false);
-        $figure->addMedium($media);
+        return new JsonResponse(                    [
+            'nextFigure' =>  $this->render('figure/load_more.html.twig', ['figures'=> $figures])->getContent(),
+            'pages' => $page < $lastPage ? $lastPage : false
+        ], 200);
+
     }
 
 }

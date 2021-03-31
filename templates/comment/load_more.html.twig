@@ -1,0 +1,25 @@
+{% for comment in comments %}
+    <div class="comment">
+        <div class="row p-0 m-2">
+            <div class="col-4 col-md-2 p-0">
+                <div class="row justify-content-center p-0 m-0">
+                    <div class="col-12 text-center p-0">
+                        <img src="{{ asset(avatar_directory ~  comment.author.avatar ) }}"
+                             alt="user_img"
+                             width="75"
+                             height="75"
+                             class="rounded-circle"
+                        >
+                    </div>
+                </div>
+                <div class="row justify-content-center p-0 m-0">
+                    <small class="col-12 text-center">{{ comment.author.username }}</small>
+                    <small class="col-12 text-center">{{ comment.createdAt | date('d-m-Y') }}</small>
+                </div>
+            </div>
+            <div class="col-8 col-md-10 p-0">
+                {{ comment.content }}
+            </div>
+        </div>
+    </div>
+{% endfor %}

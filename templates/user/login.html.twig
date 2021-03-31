@@ -1,17 +1,47 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Connexion</h1>
+    <div class="user_landing">
+        <div class="row justify-content-center p-t-10 m-0">
+            <h2 class="col-12 col-md-10 text-center my-4">Login</h2>
+            <form action="{{ path("login") }}" method="post" class="col-12 col-md-10 col-lg-5 text-center border border-primary pt-2">
 
-    <form action="{{ path("login") }}" method="post">
-        <div class="form-group">
-            <input placeholder="email" required type="text" name="_username" class="form-control">
+                <div class="row justify-content-center mt-3 pt-2">
+                    <div class="col-12 text-center">
+                        <label for="_username" class="mb-0">Username</label>
+                    </div>
+                    <div class="col-12 text-center">
+                        <input required
+                               type="text"
+                               name="_username"
+                               class="col-12 col-md-6 text-center my-0 registration_input"
+                        />
+                    </div>
+                </div>
+
+                <div class="row justify-content-center mt-3 pt-2">
+                    <div class="col-12 text-center">
+                        <label for="_password" class="mb-0">Password</label>
+                    </div>
+                    <div class="col-12 text-center">
+                        <input required
+                               type="password"
+                               name="_password"
+                               class="col-12 col-md-6 text-center my-0 registration_input"
+                        />
+                    </div>
+                </div>
+
+                <div class="row justify-content-center mt-3 mb-3 py-3">
+                    <a href="{{ path("forgot_password") }}" class="col-6 text-info">Forgot Password ?</a>
+                </div>
+                <input type="hidden" name="_target_path" value="{{ path('figure_index') }}" />
+                <div class="row justify-content-center mt-3 mb-4">
+                    <button type="submit" class="btn btn-info col-10 col-sm-6 col-md-3 col-lg-5">Login</button>
+                </div>
+
+            </form>
         </div>
-        <div class="form-group">
-            <input placeholder="mot de passe" required type="password" name="_password" class="form-control">
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-success">login</button>
-        </div>
-    </form>
+    </div>
 {% endblock %}
+{% block footer %}{%  endblock %}
