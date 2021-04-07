@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Snowtricks!{% endblock %}
+{% block title %}Snowtricks! {{ figure.name }}{% endblock %}
 
 {% block body %}
     {% set favorite_img = figure.media|filter(img => (img.favorite is same as(true)) and (img.type is same as('photo'))) %}
