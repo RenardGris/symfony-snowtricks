@@ -28,4 +28,9 @@ final class Version20210224154722 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE figure DROP created_at, DROP updated_at');
     }
+
+    public function isTransactional(): bool
+    {
+        return false;
+    }
 }

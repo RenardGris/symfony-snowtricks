@@ -78,7 +78,9 @@ class FigureController extends AbstractController
 
             if(count($videos) > 0){
                 foreach($videos as $video){
-                    $mc->storeMediaToFigure($figure,$video, 'video', $this->getParameter('images_directory'));
+                    if(isset($video))  {
+                        $mc->storeMediaToFigure($figure,$video, 'video', $this->getParameter('images_directory'));
+                    }
                 }
             }
 
